@@ -22,11 +22,15 @@ class Publisher(IRCClient):
         self.msg(channel, message)
 
 class Listener(LineReceiver):
+    def connectionMade(self):
+        print "Connection made:", self.transport
 
     def lineReceived(self, line):
         password, channel, message = line.split(':', 2)
         assert password == config.LISTENER_PASSWORD
         if self.factory.publisher.connection:
+            print "Sending message:", channel, message
             self.factory.publisher.connection.send(channel, message)
         else:
+            print "Queueing message:", channel, message
             self.factory.publisher.queued.append((channel, message))
