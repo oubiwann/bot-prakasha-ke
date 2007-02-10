@@ -11,7 +11,8 @@ def send_commit(branch, rev_id):
     import socket
     s = socket.socket()
     s.connect((HOST, PORT))
+    packit = ''
     for line in message.splitlines():
-        packit = '%s:%s:%s\r\n' % (PASSWORD, CHANNEL, line)
-        s.sendall(packit)
+        packit += '%s:%s:%s\r\n' % (PASSWORD, CHANNEL, line)
+    s.sendall(packit)
     s.close()
