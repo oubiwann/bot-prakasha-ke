@@ -4,7 +4,10 @@ PASSWORD = 'password'
 CHANNEL = '#channel'
 
 def send_commit(branch, rev_id):
-    message = branch.repository.get_revision(rev_id).message
+    revision = branch.repository.get_revision(rev_id)
+    message = "%s [%s] - %s" % (revision.committer,
+                                branch.get_config().get_nickname(),
+                                revision.message)
     import socket
     s = socket.socket()
     s.connect((HOST, PORT))
