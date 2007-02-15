@@ -1,21 +1,25 @@
-Edit config.py
-run twistd -y bot.tac
+Publish Bot
+-----------
 
-Then connect to LISTENER_PORT and send lines like
+To start a publish-bot service, first edit config.py and then run
+`twistd -y bot.tac'.
 
-LISTENER_PASSWORD:#channel:message
+Connect to LISTENER_PORT and send lines of the form:
+
+  LISTENER_PASSWORD:#channel:message
 
 the bot will join #channel (if it's not already there) and send the message.
 
 Bazaar commit hook
 ------------------
 
-There's a bzr commit hook in bzrcommitmessage.py. Edit it to specify
-configuration details about your listener and the channel to send to.
+There's a bzr commit hook in bzrcommitmessage.py, which will send your
+commit messages to a Publish-bot service so that you can see your
+commits in an IRC channel.
 
-symlink it into ~/.bazaar/plugins, then edit ~/.bazaar/locations.conf,
-creating or editing an entry for whatever branch or branch hierarchy
-you want the hook to apply to, like so:
+To use it, symlink it into ~/.bazaar/plugins, then edit
+~/.bazaar/locations.conf, creating or editing an entry for whatever
+branch or branch hierarchy you want the hook to apply to, like so:
 
 [/home/radix/Projects/myproj]
 post_commit = bzrlib.plugins.bzrcommitmessage.post_commit
