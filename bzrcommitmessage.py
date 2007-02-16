@@ -8,8 +8,8 @@ def send_commit(branch, rev_id):
     revision = branch.repository.get_revision(rev_id)
     message = ("%s r%d committed by %s\r\n%s"
                % (branch.get_config().get_nickname(),
-                  branch.revno(), revision.message,
-                  branch.get_config().user_email()))
+                  branch.revno(), branch.get_config().user_email(),
+                  revision.message))
     import socket
     s = socket.socket()
     s.connect((host, port))
