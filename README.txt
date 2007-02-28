@@ -29,10 +29,11 @@ branch or branch hierarchy you want the hook to apply to, like so:
 
 [/home/radix/Projects/myproj]
 post_commit = bzrlib.plugins.bzrcommitmessage.post_commit
-message_host = 'commitbot.example.com'
+message_host = commitbot.example.com
 message_port = 1234
-message_password = 'yay'
-message_channel = '#bottest'
+message_password = yay
+message_channel = bottest
 
+Notice that the channel does NOT include a leading hash mark ('#').
 Now any commits that happen under /home/radix/Projects/myproj will
 send a message to #bottest.
