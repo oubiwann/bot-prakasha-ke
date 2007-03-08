@@ -33,7 +33,14 @@ message_host = commitbot.example.com
 message_port = 1234
 message_password = yay
 message_channel = bottest
+message_branch_prefix = myproj
 
-Notice that the channel does NOT include a leading hash mark ('#').
-Now any commits that happen under /home/radix/Projects/myproj will
-send a message to #bottest.
+The message_branch_prefix configuration parameter is optional.  When
+present it will be prepended to the name of the branch in the form:
+branch_prefix/branch_name.  This is useful when you need to
+disambiguate branches with the same names for different projects, such
+as for client/server applications.  Also, notice that the channel does
+NOT include a leading hash mark ('#').
+
+Now any commits that happen under /home/radix/Projects/myproj
+will send a message to #bottest.

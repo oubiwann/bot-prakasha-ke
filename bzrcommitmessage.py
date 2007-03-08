@@ -4,11 +4,15 @@ def send_commit(branch, rev_id):
     port = int(config.get_user_option('message_port'))
     password = config.get_user_option('message_password').encode('utf-8')
     channel = config.get_user_option('message_channel').encode('utf-8')
+    branch_prefix = config.get_user_option('message_branch_prefix')
 
+    nickname = branch.get_config().get_nickname()
+    if branch_prefix:
+        branch_prefix = branch_prefix.encode('utf-8')
+        nickname = "%s/%s" % (branch_prefix, nickname)
     revision = branch.repository.get_revision(rev_id)
     message = ("%s r%d committed by %s\r\n%s"
-               % (branch.get_config().get_nickname(),
-                  branch.revno(), branch.get_config().user_email(),
+               % (nickname, branch.revno(), branch.get_config().user_email(),
                   revision.message))
     import socket
     s = socket.socket()
