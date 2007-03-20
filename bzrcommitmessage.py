@@ -12,9 +12,15 @@ def send_commit(branch, rev_id):
                   revision.message))
     import socket
     s = socket.socket()
-    s.connect((host, port))
+    try:
+        s.connect((host, port))
+    except:
+        print "Couldn't connect to publish-bot at %s:%s." % (host, port)
+        return
+        
     packit = ''
     for line in message.splitlines():
         packit += '%s:#%s:%s\r\n' % (password, channel, line)
     s.sendall(packit)
     s.close()
+        
