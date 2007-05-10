@@ -28,7 +28,7 @@ To use it, symlink it into ~/.bazaar/plugins, then edit
 branch or branch hierarchy you want the hook to apply to, like so:
 
 [/home/radix/Projects/myproj]
-post_commit = bzrlib.plugins.bzrcommitmessage.post_commit
+post_commit = bzrlib.plugins.bzrcommitmessage.send_commit
 message_host = commitbot.example.com
 message_port = 1234
 message_password = yay
