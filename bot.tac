@@ -1,4 +1,4 @@
-from twisted.internet.protocol import ServerFactory, ClientFactory
+from twisted.internet.protocol import ServerFactory, ReconnectingClientFactory
 from twisted.application.internet import TCPServer, TCPClient, SSLClient
 from twisted.application.service import Application
 from twisted.internet.ssl import ClientContextFactory
@@ -12,7 +12,7 @@ application = Application("publishbot")
 sf = ServerFactory()
 sf.protocol = Listener
 
-cf = ClientFactory()
+cf = ReconnectingClientFactory()
 cf.protocol = Publisher
 cf.queued = []
 cf.connection = None
