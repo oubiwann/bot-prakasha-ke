@@ -1,5 +1,6 @@
-from twisted.words.protocols.irc import IRCClient
 from twisted.protocols.basic import LineReceiver
+from twisted.words.protocols.irc import IRCClient
+from twisted.internet.protocol import ReconnectingClientFactory
 
 import config
 
@@ -20,6 +21,11 @@ class Publisher(IRCClient):
     def send(self, channel, message):
         self.join(channel)
         self.msg(channel, message)
+
+class PublisherFactory(ReconnectingClientFactory):
+    protocol = Publisher
+    queued = []
+    connection = None
 
 class Listener(LineReceiver):
     """
@@ -42,3 +48,5 @@ class Listener(LineReceiver):
         else:
             print "Queueing message:", channel, message
             self.factory.publisher.queued.append((channel, message))
+
+
