@@ -1,10 +1,14 @@
 # IRC
-NICK = 'loudmouth'
-IRC_SERVER = 'irc.freenode.net'
-IRC_PORT = 6667
-IRC_SERVER_PASSWORD = None
-SSL_IRC = False
+class IRC(object): pass
+irc = IRC()
+irc.nick = 'loudmouth'
+irc.server = 'irc.freenode.net'
+irc.port = 6667
+irc.serverPassword = None
+irc.enableSSL = False
 
 # Listener
-LISTENER_PORT = 1234
-LISTENER_PASSWORD = 'ircb0tz'
+class Listener(object): pass
+listener = Listener()
+listener.port = 1234
+listener.password = 'ircb0tz'

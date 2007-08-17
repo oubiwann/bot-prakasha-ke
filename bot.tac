@@ -9,21 +9,22 @@ import config
 
 application = Application("publishbot")
 
-sf = ServerFactory()
-sf.protocol = Listener
+serverFactory = ServerFactory()
+serverFactory.protocol = Listener
 
-cf = ReconnectingClientFactory()
-cf.protocol = Publisher
-cf.queued = []
-cf.connection = None
+clientFactory = ReconnectingClientFactory()
+clientFactory.protocol = Publisher
+clientFactory.queued = []
+clientFactory.connection = None
 
-sf.publisher = cf
+serverFactory.publisher = clientFactory
 
-TCPServer(config.LISTENER_PORT, sf).setServiceParent(application)
-if config.SSL_IRC:
-    ircservice = SSLClient(config.IRC_SERVER, config.IRC_PORT, cf,
-                           ClientContextFactory())
+server = TCPServer(config.listener.port, serverFactory)
+server.setServiceParent(application)
+if config.irc.enableSSL:
+    ircservice = SSLClient(config.irc.server, config.irc.port,
+        clientFactory, ClientContextFactory())
 else:
-    ircservice = TCPClient(config.IRC_SERVER, config.IRC_PORT, cf)
-
+    ircservice = TCPClient(config.irc.server, config.irc.port,
+        clientFactory)
 ircservice.setServiceParent(application)

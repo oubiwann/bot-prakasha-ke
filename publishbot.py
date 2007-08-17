@@ -4,8 +4,8 @@ from twisted.protocols.basic import LineReceiver
 import config
 
 class Publisher(IRCClient):
-    nickname = config.NICK
-    password = config.IRC_SERVER_PASSWORD
+    nickname = config.irc.nick
+    password = config.irc.serverPassword
 
     def connectionMade(self):
         print "connection made to!", self.transport
@@ -27,7 +27,7 @@ class Listener(LineReceiver):
 
     def lineReceived(self, line):
         password, channel, message = line.split(':', 2)
-        assert password == config.LISTENER_PASSWORD
+        assert password == config.listener.password
         if self.factory.publisher.connection:
             print "Sending message:", channel, message
             self.factory.publisher.connection.send(channel, message)
