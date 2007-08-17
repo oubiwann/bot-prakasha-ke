@@ -5,7 +5,7 @@ irc.nick = 'loudmouth'
 irc.server = 'irc.freenode.net'
 irc.port = 6667
 irc.serverPassword = None
-irc.enableSSL = False
+irc.sslEnabled = False
 
 # Listener
 class Listener(object): pass
@@ -25,3 +25,4 @@ log.http = HTTP()
 log.http.port = 1235
 log.http.docRoot = 'irclogs'
 log.http.vhostEnabled = True
+log.http.vhostName = 'localhost'
