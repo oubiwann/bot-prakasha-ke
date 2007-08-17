@@ -22,6 +22,14 @@ class Publisher(IRCClient):
         self.msg(channel, message)
 
 class Listener(LineReceiver):
+    """
+    This protocol is used for receiving messages via TCP and sending them to
+    the appropriate IRC channel on a single IRC server.
+
+    Messages are sent in the following format:
+
+        mypassword:#superchannel:this is the coolest message ever
+    """
     def connectionMade(self):
         print "Connection made:", self.transport
 
