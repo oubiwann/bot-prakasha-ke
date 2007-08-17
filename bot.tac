@@ -8,6 +8,7 @@ from twisted.internet.ssl import ClientContextFactory
 
 import config
 from publishbot import Listener
+from publishbot import LoggerFactory
 from publishbot import PublisherFactory
 
 application = service.Application("publishbot")
@@ -23,12 +24,18 @@ msgServer.setServiceParent(services)
 
 # setup IRC message client
 if config.irc.sslEnabled:
-    ircservice = SSLClient(config.irc.server, config.irc.port,
+    msgService = SSLClient(config.irc.server, config.irc.port,
         serverFactory.publisher, ClientContextFactory())
 else:
-    ircservice = TCPClient(config.irc.server, config.irc.port,
+    msgService = TCPClient(config.irc.server, config.irc.port,
         serverFactory.publisher)
-ircservice.setServiceParent(services)
+msgService.setServiceParent(services)
+
+# setup IRC log clients
+for channel in config.log.channels:
+    logger = LoggerFactory(config.irc.server, channel)
+    logService = TCPClient(config.irc.server, config.irc.port, logger)
+    logService.setServiceParent(services)
 
 # setup web server
 webroot = static.File(config.log.http.docRoot)
