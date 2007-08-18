@@ -24,30 +24,39 @@ def rotateLogs(service):
     """
 
     """
-    serviceLogger = service.args[-1]
-    print "Last rotation: %s" % str(serviceLogger.lastRotation)
+    server, port, serviceFactory = service.args
+    serviceLogger = serviceFactory.protocol
+    last = serviceFactory.lastRotation
+    if not last:
+        print "Last rotation is not yet defined; skipping rotation check ..."
+        return
+    print "Last rotation: %s" % str(last)
     now = datetime.now()
-    #hoursAgo = (now - serviceLogger.lastRotation).seconds /60. /60.
-    hoursAgo = (now - serviceLogger.lastRotation).seconds /60.
+    #hoursAgo = (now - last).seconds /60. /60.
+    hoursAgo = (now - last).seconds /60.
     #import pdb;pdb.set_trace()
     # XXX hard-coded 24-hour rotation
     #if hoursAgo >= 24:
-    if hoursAgo >= 5:
-        print "hoursAgo is more than ten (minutes). Resetting..."
+    timeCheck = 5
+    if hoursAgo >= timeCheck:
+        #print "hoursAgo is more than %s; resetting..." % timeCheck
+        print "hoursAgo is more than %s (minutes); resetting..." % timeCheck
         # XXX this causes a looping problem with reconnecting clients
-        serviceLogger.stopFactory()
-        serviceLogger.startFactory()
-        service.stopService()
-        service.startService()
+        serviceFactory.stopFactory()
+        serviceFactory.startFactory()
+        #serviceFactory.connection = None
+        #serviceLogger.connected = 0
+        #service.stopService()
+        #service.startService()
         midnight = datetime(*now.timetuple()[0:3])
         t = list(now.timetuple())
         t[4] = t[4] - 2
         midnight = datetime(*t[:-2])
-        serviceLogger.lastRotation = midnight
+        serviceFactory.lastRotation = midnight
     else:
-        print "hoursAgo is not more than ten (minutes). Skipping..."
+        #print "hoursAgo is not more than %s; skipping..." % timeCheck
+        print "hoursAgo is not more than %s (minutes); skipping..." % timeCheck
         
-
 class Publisher(IRCClient):
     nickname = config.irc.nick
     password = config.irc.serverPassword
@@ -98,8 +107,8 @@ class MessageLogger(object):
     An independent logger class (because separation of application
     and protocol logic is a good thing).
     """
-    def __init__(self, file):
-        self.file = file
+    def __init__(self, filename):
+        self.file = open(filename, 'a')
 
     def log(self, message):
         """
@@ -117,31 +126,47 @@ class Logger(IRCClient):
     A logging IRC Client.
     """
     nickname = config.log.nick
+    loggers = {}
     
     def connectionMade(self):
         IRCClient.connectionMade(self)
-        self.logger = MessageLogger(open(self.factory.filename, "a"))
-        self.logger.log("[connected at %s]" %
-            time.asctime(time.localtime(time.time())))
+        # XXX hard-coded time
+        midnight = datetime(*datetime.now().timetuple()[0:3])
+        print "Setting initial rotation time now ..."
+        self.factory.lastRotation = midnight
+        print self.factory.lastRotation
+        for chan in self.getChannels():
+            filename = getLogFilename(self.factory.server, chan)
+            logger = MessageLogger(filename)
+            self.loggers.update({chan: logger})
+            logger.log("[connected at %s]" %
+                time.asctime(time.localtime(time.time())))
 
     def connectionLost(self, reason):
         IRCClient.connectionLost(self, reason)
-        self.logger.log("[disconnected at %s]" %
-            time.asctime(time.localtime(time.time())))
-        self.logger.close()
+        for logger in self.loggers.values():
+            logger.log("[disconnected at %s]" %
+                time.asctime(time.localtime(time.time())))
+            logger.close()
+
+    def getChannels(self):
+        return self.factory.channels
 
     # callbacks for events
     def signedOn(self):
         """
         Called when bot has succesfully signed on to server.
         """
-        self.join(self.factory.channel)
+        #self.join(self.factory.channel)
+        for channel in self.getChannels():
+            self.join(channel)
 
     def joined(self, channel):
         """
         This will get called when the bot joins the channel.
         """
-        self.logger.log("[I have joined %s]" % channel)
+        self.loggers[channel].log("[%s (logger bot) has joined %s]" % (
+            config.log.nick, channel))
 
     def privmsg(self, user, channel, msg):
         """
@@ -154,14 +179,18 @@ class Logger(IRCClient):
             print template % (user, channel, msg)
             return
         # log public messages
-        self.logger.log("<%s> %s" % (user, msg))
+        try:
+            self.loggers[channel].log("<%s> %s" % (user, msg))
+        except KeyError:
+            template = "Could not log the following messege to %s:\n%s"
+            print template % (channel, msg)
         
     def action(self, user, channel, msg):
         """
         This will get called when the bot sees someone do an action.
         """
         user = user.split('!', 1)[0]
-        self.logger.log("* %s %s" % (user, msg))
+        self.loggers[channel].log("* %s %s" % (user, msg))
 
     # irc callbacks
     def irc_NICK(self, prefix, params):
@@ -170,9 +199,11 @@ class Logger(IRCClient):
         """
         old_nick = prefix.split('!')[0]
         new_nick = params[0]
-        self.logger.log("%s is now known as %s" % (old_nick, new_nick))
+        for logger in self.loggers.values():
+            logger.log("%s is now known as %s" % (old_nick, new_nick))
 
-class LoggerFactory(ClientFactory):
+#class LoggerFactory(ClientFactory):
+class LoggerFactory(ReconnectingClientFactory):
     """
     A factory for LogBots.
 
@@ -184,21 +215,12 @@ class LoggerFactory(ClientFactory):
     connection = None
     lastRotation = None
 
-    def __init__(self, server, channel):
+    def __init__(self, server, channels):
         self.server = server
-        self.channel = channel
-        self.filename = getLogFilename(self.server, self.channel)
-        midnight = datetime(*datetime.now().timetuple()[0:3])
-        self.lastRotation = midnight
+        self.channels = channels
 
     def startFactory(self, *args, **kwds):
-        self.filename = getLogFilename(self.server, self.channel)
+        midnight = datetime(*datetime.now().timetuple()[0:3])
+        self.lastRotation = midnight
         ClientFactory.startFactory(self, *args, **kwds)
 
-    def clientConnectionLost(self, connector, reason):
-        """
-        If we get disconnected, reconnect to server.
-        """
-        print "lost client connection: %s" % str(reason)
-        #print "Disconnected from the server; attempting to reconnect ..."
-        #connector.connect()

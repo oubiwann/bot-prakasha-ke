@@ -32,14 +32,13 @@ else:
 msgService.setServiceParent(services)
 
 # setup IRC log clients and log rotators
-for channel in config.log.channels:
-    logger = LoggerFactory(config.irc.server, channel)
-    logService = internet.TCPClient(config.irc.server, config.irc.port,
-        logger)
-    logService.setServiceParent(services)
-    rotService = internet.TimerService(config.log.rotateCheckInterval,
-        rotateLogs, logService)
-    rotService.setServiceParent(services)
+logger = LoggerFactory(config.irc.server, config.log.channels)
+logService = internet.TCPClient(config.irc.server, config.irc.port,
+    logger)
+logService.setServiceParent(services)
+rotService = internet.TimerService(config.log.rotateCheckInterval,
+    rotateLogs, logService)
+rotService.setServiceParent(services)
 
 # setup web server
 webroot = static.File(config.log.http.docRoot)

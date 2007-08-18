@@ -21,10 +21,11 @@ log = Log()
 log.nick = 'wallflower'
 log.channels = ['#adytum', '#tmlabs', '#divmod-fanclub', '#divmod', '#twisted',
     '#twisted.web']
-#log.channels = ['#adytum', '#test']
+log.channels = ['#adytum', '#adytum-test1', '#adytum-test2', '#adytum-test3',
+    '#adytum-test4']
 log.rotateCheckInterval = 60
 log.http = HTTP()
 log.http.port = 1235
 log.http.docRoot = 'irclogs'
 log.http.vhostEnabled = True
-log.http.vhostName = 'localhost'
+log.http.vhost= 'localhost'
