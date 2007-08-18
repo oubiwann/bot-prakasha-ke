@@ -5,8 +5,48 @@ from datetime import datetime
 from twisted.protocols.basic import LineReceiver
 from twisted.words.protocols.irc import IRCClient
 from twisted.internet.protocol import ReconnectingClientFactory
+from twisted.internet.protocol import ClientFactory
 
 import config
+
+def getLogFilename(server, channel):
+    now = datetime.now()
+    year = now.strftime("%Y")
+    month = now.strftime("%H%M%S_%m%B")
+    day = now.strftime("%d")
+    path = "%s/%s/%s/" % (config.log.http.docRoot, year, month)
+    filename = "%s.%s_%s.txt" % (day, server, channel)
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path + filename
+
+def rotateLogs(service):
+    """
+
+    """
+    serviceLogger = service.args[-1]
+    print "Last rotation: %s" % str(serviceLogger.lastRotation)
+    now = datetime.now()
+    #hoursAgo = (now - serviceLogger.lastRotation).seconds /60. /60.
+    hoursAgo = (now - serviceLogger.lastRotation).seconds /60.
+    #import pdb;pdb.set_trace()
+    # XXX hard-coded 24-hour rotation
+    #if hoursAgo >= 24:
+    if hoursAgo >= 5:
+        print "hoursAgo is more than ten (minutes). Resetting..."
+        # XXX this causes a looping problem with reconnecting clients
+        serviceLogger.stopFactory()
+        serviceLogger.startFactory()
+        service.stopService()
+        service.startService()
+        midnight = datetime(*now.timetuple()[0:3])
+        t = list(now.timetuple())
+        t[4] = t[4] - 2
+        midnight = datetime(*t[:-2])
+        serviceLogger.lastRotation = midnight
+    else:
+        print "hoursAgo is not more than ten (minutes). Skipping..."
+        
 
 class Publisher(IRCClient):
     nickname = config.irc.nick
@@ -74,7 +114,7 @@ class MessageLogger(object):
 
 class Logger(IRCClient):
     """
-    A logging IRC bot.
+    A logging IRC Client.
     """
     nickname = config.log.nick
     
@@ -132,7 +172,7 @@ class Logger(IRCClient):
         new_nick = params[0]
         self.logger.log("%s is now known as %s" % (old_nick, new_nick))
 
-class LoggerFactory(ReconnectingClientFactory):
+class LoggerFactory(ClientFactory):
     """
     A factory for LogBots.
 
@@ -142,18 +182,23 @@ class LoggerFactory(ReconnectingClientFactory):
     # the class of the protocol to build when new connection is made
     protocol = Logger
     connection = None
+    lastRotation = None
 
     def __init__(self, server, channel):
+        self.server = server
         self.channel = channel
-        now = datetime.now()
-        year = now.strftime("%Y")
-        month = now.strftime("%m%B")
-        day = now.strftime("%d")
-        path = "%s/%s/%s/" % (config.log.http.docRoot, year, month)
-        filename = "%s.%s_%s.txt" % (day, server, channel)
-        if not os.path.exists(path):
-            os.makedirs(path)
-        self.filename = path + filename
+        self.filename = getLogFilename(self.server, self.channel)
+        midnight = datetime(*datetime.now().timetuple()[0:3])
+        self.lastRotation = midnight
 
+    def startFactory(self, *args, **kwds):
+        self.filename = getLogFilename(self.server, self.channel)
+        ClientFactory.startFactory(self, *args, **kwds)
 
-
+    def clientConnectionLost(self, connector, reason):
+        """
+        If we get disconnected, reconnect to server.
+        """
+        print "lost client connection: %s" % str(reason)
+        #print "Disconnected from the server; attempting to reconnect ..."
+        #connector.connect()

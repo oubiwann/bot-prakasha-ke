@@ -1,12 +1,12 @@
 from twisted.web import vhost
 from twisted.web import server
 from twisted.web import static
-from twisted.application import service
+from twisted.application import service, internet
 from twisted.internet.protocol import ServerFactory
-from twisted.application.internet import TCPServer, TCPClient, SSLClient
 from twisted.internet.ssl import ClientContextFactory
 
 import config
+from publishbot import rotateLogs
 from publishbot import Listener
 from publishbot import LoggerFactory
 from publishbot import PublisherFactory
@@ -19,23 +19,27 @@ serverFactory = ServerFactory()
 serverFactory.protocol = Listener
 serverFactory.publisher = PublisherFactory()
 
-msgServer = TCPServer(config.listener.port, serverFactory)
+msgServer = internet.TCPServer(config.listener.port, serverFactory)
 msgServer.setServiceParent(services)
 
 # setup IRC message client
 if config.irc.sslEnabled:
-    msgService = SSLClient(config.irc.server, config.irc.port,
+    msgService = internet.SSLClient(config.irc.server, config.irc.port,
         serverFactory.publisher, ClientContextFactory())
 else:
-    msgService = TCPClient(config.irc.server, config.irc.port,
+    msgService = internet.TCPClient(config.irc.server, config.irc.port,
         serverFactory.publisher)
 msgService.setServiceParent(services)
 
-# setup IRC log clients
+# setup IRC log clients and log rotators
 for channel in config.log.channels:
     logger = LoggerFactory(config.irc.server, channel)
-    logService = TCPClient(config.irc.server, config.irc.port, logger)
+    logService = internet.TCPClient(config.irc.server, config.irc.port,
+        logger)
     logService.setServiceParent(services)
+    rotService = internet.TimerService(config.log.rotateCheckInterval,
+        rotateLogs, logService)
+    rotService.setServiceParent(services)
 
 # setup web server
 webroot = static.File(config.log.http.docRoot)
@@ -43,5 +47,5 @@ if config.log.http.vhostEnabled:
     vResource = vhost.VHostMonsterResource()
     webroot.putChild('vhost', vResource)
 site = server.Site(webroot)
-webserver = TCPServer(config.log.http.port, site)
+webserver = internet.TCPServer(config.log.http.port, site)
 webserver.setServiceParent(services)
