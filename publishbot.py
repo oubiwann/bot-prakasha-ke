@@ -2,6 +2,7 @@ import os
 import time
 from datetime import datetime
 
+from twisted.application import internet
 from twisted.protocols.basic import LineReceiver
 from twisted.words.protocols.irc import IRCClient
 from twisted.internet.protocol import ReconnectingClientFactory
@@ -12,7 +13,8 @@ import config
 def getLogFilename(server, channel):
     now = datetime.now()
     year = now.strftime("%Y")
-    month = now.strftime("%H%M%S_%m%B")
+    month = now.strftime("%m%B")
+    #month = now.strftime("%H%M%S_%m%B")
     day = now.strftime("%d")
     path = "%s/%s/%s/" % (config.log.http.docRoot, year, month)
     filename = "%s.%s_%s.txt" % (day, server, channel)
@@ -20,43 +22,6 @@ def getLogFilename(server, channel):
         os.makedirs(path)
     return path + filename
 
-def rotateLogs(service):
-    """
-
-    """
-    server, port, serviceFactory = service.args
-    serviceLogger = serviceFactory.protocol
-    last = serviceFactory.lastRotation
-    if not last:
-        print "Last rotation is not yet defined; skipping rotation check ..."
-        return
-    print "Last rotation: %s" % str(last)
-    now = datetime.now()
-    #hoursAgo = (now - last).seconds /60. /60.
-    hoursAgo = (now - last).seconds /60.
-    #import pdb;pdb.set_trace()
-    # XXX hard-coded 24-hour rotation
-    #if hoursAgo >= 24:
-    timeCheck = 5
-    if hoursAgo >= timeCheck:
-        #print "hoursAgo is more than %s; resetting..." % timeCheck
-        print "hoursAgo is more than %s (minutes); resetting..." % timeCheck
-        # XXX this causes a looping problem with reconnecting clients
-        serviceFactory.stopFactory()
-        serviceFactory.startFactory()
-        #serviceFactory.connection = None
-        #serviceLogger.connected = 0
-        #service.stopService()
-        #service.startService()
-        midnight = datetime(*now.timetuple()[0:3])
-        t = list(now.timetuple())
-        t[4] = t[4] - 2
-        midnight = datetime(*t[:-2])
-        serviceFactory.lastRotation = midnight
-    else:
-        #print "hoursAgo is not more than %s; skipping..." % timeCheck
-        print "hoursAgo is not more than %s (minutes); skipping..." % timeCheck
-        
 class Publisher(IRCClient):
     nickname = config.irc.nick
     password = config.irc.serverPassword
@@ -202,8 +167,8 @@ class Logger(IRCClient):
         for logger in self.loggers.values():
             logger.log("%s is now known as %s" % (old_nick, new_nick))
 
-#class LoggerFactory(ClientFactory):
-class LoggerFactory(ReconnectingClientFactory):
+#class LoggerFactory(ReconnectingClientFactory):
+class LoggerFactory(ClientFactory):
     """
     A factory for LogBots.
 
@@ -214,6 +179,7 @@ class LoggerFactory(ReconnectingClientFactory):
     protocol = Logger
     connection = None
     lastRotation = None
+    doRotate = False
 
     def __init__(self, server, channels):
         self.server = server
@@ -223,4 +189,39 @@ class LoggerFactory(ReconnectingClientFactory):
         midnight = datetime(*datetime.now().timetuple()[0:3])
         self.lastRotation = midnight
         ClientFactory.startFactory(self, *args, **kwds)
+
+    def rotateLogs(self, service):
+        """
+
+        """
+        if not self.doRotate:
+            self.doRotate = True
+            return
+        last = self.lastRotation
+        if not last:
+            print "Last rotation is not yet defined; skipping rotation check ..."
+            return
+        #print "Last rotation: %s" % str(last)
+        now = datetime.now()
+        hoursAgo = (now - last).seconds /60. /60.
+        #hoursAgo = (now - last).seconds /60.
+        # XXX hard-coded 24-hour rotation
+        timeCheck = 24
+        #timeCheck = 5
+        if hoursAgo >= timeCheck:
+            print "hoursAgo is more than %s; resetting..." % timeCheck
+            #print "hoursAgo is more than %s (minutes); resetting..." % timeCheck
+            # XXX this causes a looping problem with reconnecting clients
+            service.stopService()
+            service.startService()
+            midnight = datetime(*now.timetuple()[0:3])
+            # XXX - test code of a short interval
+            #t = list(now.timetuple())
+            #t[4] = t[4] - 2
+            #midnight = datetime(*t[:-2])
+            self.lastRotation = midnight
+        #else:
+            #print "hoursAgo is not more than %s; skipping..." % timeCheck
+            #print "hoursAgo is not more than %s (minutes); skipping..." % timeCheck
+
 

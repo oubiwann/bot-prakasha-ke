@@ -6,7 +6,6 @@ from twisted.internet.protocol import ServerFactory
 from twisted.internet.ssl import ClientContextFactory
 
 import config
-from publishbot import rotateLogs
 from publishbot import Listener
 from publishbot import LoggerFactory
 from publishbot import PublisherFactory
@@ -35,9 +34,10 @@ msgService.setServiceParent(services)
 logger = LoggerFactory(config.irc.server, config.log.channels)
 logService = internet.TCPClient(config.irc.server, config.irc.port,
     logger)
+logService.setName('logService')
 logService.setServiceParent(services)
 rotService = internet.TimerService(config.log.rotateCheckInterval,
-    rotateLogs, logService)
+    logger.rotateLogs, logService)
 rotService.setServiceParent(services)
 
 # setup web server
