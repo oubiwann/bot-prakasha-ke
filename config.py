@@ -20,7 +20,7 @@ log = Log()
 #log.nick = 'loudmouth-logger'
 log.nick = 'wallflower'
 log.channels = ['#adytum', '#tmlabs', '#divmod-fanclub', '#divmod', '#twisted',
-    '#twisted.web']
+    '#twisted.web', '#storm']
 #log.channels = ['#adytum', '#adytum-test1', '#adytum-test2', '#adytum-test3', '#adytum-test4']
 log.rotateCheckInterval = 60
 log.http = HTTP()

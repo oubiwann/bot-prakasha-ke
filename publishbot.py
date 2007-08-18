@@ -16,8 +16,9 @@ def getLogFilename(server, channel):
     month = now.strftime("%m%B")
     #month = now.strftime("%H%M%S_%m%B")
     day = now.strftime("%d")
-    path = "%s/%s/%s/" % (config.log.http.docRoot, year, month)
-    filename = "%s.%s_%s.txt" % (day, server, channel)
+    path = "%s/%s/%s/%s_%s/" % (config.log.http.docRoot, year, month, server,
+        channel)
+    filename = "%s.txt" % day
     if not os.path.exists(path):
         os.makedirs(path)
     return path + filename
