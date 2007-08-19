@@ -152,7 +152,8 @@ class LoggerFactory(ClientFactory):
             return
         print "Last rotation: %s" % str(last)
         now = datetime.now()
-        hoursAgo = (now - last).seconds /60. /60.
+        diff = now - last
+        hoursAgo = ((diff.days * 60 * 60 * 24) + diff.seconds) /60. /60.
         #hoursAgo = (now - last).seconds /60.
         # XXX hard-coded 24-hour rotation
         timeCheck = 24
