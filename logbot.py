@@ -11,7 +11,6 @@ def getLogFilename(server, channel):
     now = datetime.now()
     year = now.strftime("%Y")
     month = now.strftime("%m%B")
-    #month = now.strftime("%H%M%S_%m%B")
     day = now.strftime("%d%A")
     path = "%s/%s/%s/%s_%s/" % (config.log.http.docRoot, year, month, server,
         channel)
@@ -70,7 +69,6 @@ class Logger(IRCClient):
         """
         Called when bot has succesfully signed on to server.
         """
-        #self.join(self.factory.channel)
         for channel in self.getChannels():
             self.join(channel)
 
@@ -154,26 +152,17 @@ class LoggerFactory(ClientFactory):
         now = datetime.now()
         diff = now - last
         hoursAgo = ((diff.days * 60 * 60 * 24) + diff.seconds) /60. /60.
-        #hoursAgo = (now - last).seconds /60.
         # XXX hard-coded 24-hour rotation
         timeCheck = 24
-        #timeCheck = 5
         if hoursAgo >= timeCheck:
             print "hoursAgo (%s) is more than %s; resetting..." % (hoursAgo,
                 timeCheck)
-            #print "hoursAgo is more than %s (minutes); resetting..." % timeCheck
-            # XXX this causes a looping problem with reconnecting clients
             service.stopService()
             service.startService()
             midnight = datetime(*now.timetuple()[0:3])
-            # XXX - test code of a short interval
-            #t = list(now.timetuple())
-            #t[4] = t[4] - 2
-            #midnight = datetime(*t[:-2])
             self.lastRotation = midnight
         else:
             print "hoursAgo (%s) is not more than %s; skipping..." % (hoursAgo,
                 timeCheck)
-            #print "hoursAgo is not more than %s (minutes); skipping..." % timeCheck
 
 
