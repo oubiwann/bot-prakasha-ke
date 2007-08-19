@@ -15,7 +15,7 @@ def getLogFilename(server, channel):
     year = now.strftime("%Y")
     month = now.strftime("%m%B")
     #month = now.strftime("%H%M%S_%m%B")
-    day = now.strftime("%d")
+    day = now.strftime("%d%A")
     path = "%s/%s/%s/%s_%s/" % (config.log.http.docRoot, year, month, server,
         channel)
     filename = "%s.txt" % day
@@ -80,7 +80,7 @@ class MessageLogger(object):
         """
         Write a message to the file.
         """
-        timestamp = time.strftime("[%H:%M:%S]", time.localtime(time.time()))
+        timestamp = datetime.now().strftime("[%d-%b-%Y %H:%M:%S]")
         self.file.write('%s %s\n' % (timestamp, message))
         self.file.flush()
 
@@ -96,11 +96,6 @@ class Logger(IRCClient):
     
     def connectionMade(self):
         IRCClient.connectionMade(self)
-        # XXX hard-coded time
-        midnight = datetime(*datetime.now().timetuple()[0:3])
-        print "Setting initial rotation time now ..."
-        self.factory.lastRotation = midnight
-        print self.factory.lastRotation
         for chan in self.getChannels():
             filename = getLogFilename(self.factory.server, chan)
             logger = MessageLogger(filename)
@@ -187,7 +182,9 @@ class LoggerFactory(ClientFactory):
         self.channels = channels
 
     def startFactory(self, *args, **kwds):
+        # XXX hard-coded time
         midnight = datetime(*datetime.now().timetuple()[0:3])
+        print "Setting initial rotation time now ..."
         self.lastRotation = midnight
         ClientFactory.startFactory(self, *args, **kwds)
 
@@ -202,7 +199,7 @@ class LoggerFactory(ClientFactory):
         if not last:
             print "Last rotation is not yet defined; skipping rotation check ..."
             return
-        #print "Last rotation: %s" % str(last)
+        print "Last rotation: %s" % str(last)
         now = datetime.now()
         hoursAgo = (now - last).seconds /60. /60.
         #hoursAgo = (now - last).seconds /60.
@@ -210,7 +207,8 @@ class LoggerFactory(ClientFactory):
         timeCheck = 24
         #timeCheck = 5
         if hoursAgo >= timeCheck:
-            print "hoursAgo is more than %s; resetting..." % timeCheck
+            print "hoursAgo (%s) is more than %s; resetting..." % (hoursAgo,
+                timeCheck)
             #print "hoursAgo is more than %s (minutes); resetting..." % timeCheck
             # XXX this causes a looping problem with reconnecting clients
             service.stopService()
@@ -221,8 +219,9 @@ class LoggerFactory(ClientFactory):
             #t[4] = t[4] - 2
             #midnight = datetime(*t[:-2])
             self.lastRotation = midnight
-        #else:
-            #print "hoursAgo is not more than %s; skipping..." % timeCheck
+        else:
+            print "hoursAgo (%s) is not more than %s; skipping..." % (hoursAgo,
+                timeCheck)
             #print "hoursAgo is not more than %s (minutes); skipping..." % timeCheck
 
 
