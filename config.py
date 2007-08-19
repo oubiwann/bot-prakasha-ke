@@ -17,11 +17,10 @@ listener.password = 'ircb0tz'
 class Log(object): pass
 class HTTP(object): pass
 log = Log()
-#log.nick = 'loudmouth-logger'
+#log.nick = 'nomouth-logger'
 log.nick = 'wallflower'
 log.channels = ['#adytum', '#tmlabs', '#divmod-fanclub', '#divmod', '#twisted',
     '#twisted.web', '#storm']
-#log.channels = ['#adytum', '#adytum-test1', '#adytum-test2', '#adytum-test3', '#adytum-test4']
 log.rotateCheckInterval = 60
 log.http = HTTP()
 log.http.port = 1235

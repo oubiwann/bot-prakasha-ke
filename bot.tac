@@ -6,8 +6,8 @@ from twisted.internet.protocol import ServerFactory
 from twisted.internet.ssl import ClientContextFactory
 
 import config
+from logbot import LoggerFactory
 from publishbot import Listener
-from publishbot import LoggerFactory
 from publishbot import PublisherFactory
 
 application = service.Application("publishbot")
