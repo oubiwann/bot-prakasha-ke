@@ -24,6 +24,7 @@ log.channels = ['#adytum', '#tmlabs', '#divmod-fanclub', '#divmod', '#twisted',
 #log.channels = ["#adytum", "#adytum-test"]
 log.rotateCheckInterval = 60
 log.rotateTime = '00:00'
+log.maxAgeHours = 3
 log.http = HTTP()
 log.http.port = 1235
 log.http.docRoot = 'irclogs'

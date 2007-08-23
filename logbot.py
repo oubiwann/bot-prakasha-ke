@@ -155,18 +155,18 @@ class LoggerFactory(ClientFactory):
         print "Last rotation: %s" % str(last)
         now = datetime.now()
         diff = now - last
-        elapsedTime = ((diff.days * 60 * 60 * 24) + diff.seconds) /60. /60.
-        # XXX hard-coded 24-hour rotation
-        timeCheck = 24
-        if elapsedTime >= timeCheck:
-            print "elapsedTime (%s) is more than %s; resetting..." % (elapsedTime,
-                timeCheck)
+        diffInSeconds = (diff.days * 60 * 60 * 24) + diff.seconds
+        elapsedHours = (diffInSeconds) /60. /60.
+        timeCheck = config.log.maxAgeHours
+        if elapsedHours >= timeCheck:
+            print "Elapsed time (%s) is more than %s hours; resetting..." % (
+                elapsedHours, timeCheck)
             service.stopService()
             service.startService()
             rotateDate = datetime(*now.timetuple()[0:3]+self.getRotateTime())
             self.lastRotation = rotateDate
         else:
-            print "elapsedTime (%s) is not more than %s; skipping..." % (elapsedTime,
-                timeCheck)
+            print "Elapsed time (%s) is not more than %s hours; skipping..." % (
+                elapsedHours, timeCheck)
 
 
