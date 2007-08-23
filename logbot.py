@@ -131,11 +131,15 @@ class LoggerFactory(ClientFactory):
         self.channels = channels
 
     def startFactory(self, *args, **kwds):
-        # XXX hard-coded time
-        midnight = datetime(*datetime.now().timetuple()[0:3])
+        date = datetime.now().timetuple()[0:3]
+        rotateDate = datetime(*date+self.getRotateTime())
         print "Setting initial rotation time now ..."
-        self.lastRotation = midnight
+        self.lastRotation = rotateDate
         ClientFactory.startFactory(self, *args, **kwds)
+
+    def getRotateTime(self):
+        time = config.log.rotateTime.split(':')
+        return tuple([int(x) for x in time])
 
     def rotateLogs(self, service):
         """
@@ -151,18 +155,18 @@ class LoggerFactory(ClientFactory):
         print "Last rotation: %s" % str(last)
         now = datetime.now()
         diff = now - last
-        hoursAgo = ((diff.days * 60 * 60 * 24) + diff.seconds) /60. /60.
+        elapsedTime = ((diff.days * 60 * 60 * 24) + diff.seconds) /60. /60.
         # XXX hard-coded 24-hour rotation
         timeCheck = 24
-        if hoursAgo >= timeCheck:
-            print "hoursAgo (%s) is more than %s; resetting..." % (hoursAgo,
+        if elapsedTime >= timeCheck:
+            print "elapsedTime (%s) is more than %s; resetting..." % (elapsedTime,
                 timeCheck)
             service.stopService()
             service.startService()
-            midnight = datetime(*now.timetuple()[0:3])
-            self.lastRotation = midnight
+            rotateDate = datetime(*now.timetuple()[0:3]+self.getRotateTime())
+            self.lastRotation = rotateDate
         else:
-            print "hoursAgo (%s) is not more than %s; skipping..." % (hoursAgo,
+            print "elapsedTime (%s) is not more than %s; skipping..." % (elapsedTime,
                 timeCheck)
 
 
