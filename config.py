@@ -18,7 +18,7 @@ log.nick = 'nomouth-logger'
 log.channels = ["#adytum", "#adytum-test"]
 log.rotateCheckInterval = 60
 log.rotateTime = '00:00'
-log.maxAgeHours = 12
+log.maxAgeHours = 24
 
 # Log web server
 log.http = Config()
