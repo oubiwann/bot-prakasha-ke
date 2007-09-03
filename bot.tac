@@ -5,6 +5,7 @@ from twisted.application import service, internet
 from twisted.internet.protocol import ServerFactory
 from twisted.internet.ssl import ClientContextFactory
 
+import auth
 import config
 from logbot import LoggerFactory
 from publishbot import Listener
@@ -40,11 +41,16 @@ rotService = internet.TimerService(config.log.rotateCheckInterval,
     logger.rotateLogs, logService)
 rotService.setServiceParent(services)
 
-# setup web server
+# setup log file web server
 webroot = static.File(config.log.http.docRoot)
 if config.log.http.vhostEnabled:
     vResource = vhost.VHostMonsterResource()
     webroot.putChild('vhost', vResource)
-site = server.Site(webroot)
+if config.log.http.auth == 'basic':
+    guarded = auth.guardResourceWithBasicAuth(webroot, config.log.http.realm,
+        config.log.http.users)
+    site = server.Site(guarded)
+else:
+    site = server.Site(webroot)
 webserver = internet.TCPServer(config.log.http.port, site)
 webserver.setServiceParent(services)

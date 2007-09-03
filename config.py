@@ -15,15 +15,21 @@ listener.password = 'ircb0tz'
 # Log
 log = Config()
 log.nick = 'nomouth-logger'
-#log.nick = 'wallflower'
-#log.channels = ['#adytum', '#tmlabs', '#divmod-fanclub', '#divmod', '#twisted',
-#    '#twisted.web', '#storm']
 log.channels = ["#adytum", "#adytum-test"]
 log.rotateCheckInterval = 60
 log.rotateTime = '00:00'
-log.maxAgeHours = 3
+log.maxAgeHours = 12
+
+# Log web server
 log.http = Config()
 log.http.port = 1235
 log.http.docRoot = 'irclogs'
 log.http.vhostEnabled = True
 log.http.vhost= 'localhost'
+log.http.auth = 'basic'
+log.http.realm = 'Adytum IRC Logs'
+
+# Log web server users
+log.http.users = {
+    'Jojo': 'c1rcu5b0y',
+    }
