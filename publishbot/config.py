@@ -14,7 +14,7 @@ listener.password = 'ircb0tz'
 
 # Log
 log = Config()
-log.nick = 'nomouth-logger'
+log.nick = 'publishbot'
 log.channels = ["#adytum", "#adytum-test"]
 log.rotateCheckInterval = 60
 log.rotateTime = '00:00'
