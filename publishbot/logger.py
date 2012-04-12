@@ -7,6 +7,7 @@ from twisted.internet.protocol import ClientFactory
 
 import config
 
+
 def getLogFilename(server, channel):
     now = datetime.now()
     year = now.strftime("%Y")
@@ -18,6 +19,7 @@ def getLogFilename(server, channel):
     if not os.path.exists(path):
         os.makedirs(path)
     return path + filename
+
 
 class MessageLogger(object):
     """
@@ -38,7 +40,8 @@ class MessageLogger(object):
     def close(self):
         self.file.close()
 
-class Logger(IRCClient):
+
+class LoggerClient(IRCClient):
     """
     A logging IRC Client.
     """
@@ -113,6 +116,7 @@ class Logger(IRCClient):
         for logger in self.loggers.values():
             logger.log("%s is now known as %s" % (old_nick, new_nick))
 
+
 class LoggerFactory(ClientFactory):
     """
     A factory for LogBots.
@@ -121,7 +125,7 @@ class LoggerFactory(ClientFactory):
     """
 
     # the class of the protocol to build when new connection is made
-    protocol = Logger
+    protocol = LoggerClient
     connection = None
     lastRotation = None
     doRotate = False
@@ -143,7 +147,6 @@ class LoggerFactory(ClientFactory):
 
     def rotateLogs(self, service):
         """
-
         """
         if not self.doRotate:
             self.doRotate = True
@@ -168,5 +171,3 @@ class LoggerFactory(ClientFactory):
         else:
             print "Elapsed time (%s) is not more than %s hours; skipping..." % (
                 elapsedHours, timeCheck)
-
-
