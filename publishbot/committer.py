@@ -1,4 +1,4 @@
-def send_commit(branch, rev_id):
+def send_bzr_commit(branch, rev_id):
     config = branch.get_config()
     host = config.get_user_option('message_host').encode('ascii')
     port = int(config.get_user_option('message_port'))
@@ -27,4 +27,3 @@ def send_commit(branch, rev_id):
         packit += '%s:#%s:%s\r\n' % (password, channel, line)
     s.sendall(packit)
     s.close()
-        
