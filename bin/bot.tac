@@ -5,11 +5,10 @@ from twisted.application import service, internet
 from twisted.internet.protocol import ServerFactory
 from twisted.internet.ssl import ClientContextFactory
 
-import auth
-import config
-from logbot import LoggerFactory
-from publishbot import Listener
-from publishbot import PublisherFactory
+from publishbot import auth, config
+from publishbot.logger import LoggerFactory
+from publishbot.publisher import Listener, PublisherFactory
+
 
 application = service.Application("publishbot")
 services = service.IServiceCollection(application)
