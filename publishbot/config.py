@@ -22,7 +22,7 @@ log.maxAgeHours = 24
 
 # Log web server
 log.http = Config()
-log.http.port = 1235
+log.http.port = 8080
 log.http.docRoot = 'irclogs'
 log.http.vhostEnabled = True
 log.http.vhost= 'localhost'
@@ -33,3 +33,4 @@ log.http.realm = 'Adytum IRC Logs'
 log.http.users = {
     'Jojo': 'c1rcu5b0y',
     }
+log.http.userdb = "httpd.password"
