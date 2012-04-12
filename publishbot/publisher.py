@@ -4,6 +4,7 @@ from twisted.internet.protocol import ReconnectingClientFactory
 
 import config
 
+
 class Publisher(IRCClient):
     nickname = config.irc.nick
     password = config.irc.serverPassword
@@ -22,10 +23,12 @@ class Publisher(IRCClient):
         self.join(channel)
         self.msg(channel, message)
 
+
 class PublisherFactory(ReconnectingClientFactory):
     protocol = Publisher
     queued = []
     connection = None
+
 
 class Listener(LineReceiver):
     """
