@@ -6,9 +6,17 @@ irc.server = 'irc.freenode.net'
 irc.port = 6667
 irc.serverPassword = None
 irc.sslEnabled = False
+irc.lineRate = 1
+
+# Internal SSH Server
+ssh = Config()
+ssh.keydir = ".publishbot-ssh"
+ssh.privkey = "id_rsa"
+ssh.pubkey = "id_rsa.pub"
 
 # Listener
 listener = Config()
+listener.host = "127.0.0.1"
 listener.port = 1234
 listener.password = 'ircb0tz'
 
