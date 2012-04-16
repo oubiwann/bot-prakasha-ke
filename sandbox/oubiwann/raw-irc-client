@@ -1,0 +1,53 @@
+#!/usr/bin/env python2.7
+import socket
+import time
+
+
+network = "irc.freenode.com"
+port = 6667
+nick = "oubiwann-script"
+username = nick
+hostname = nick
+servername = nick
+realname = nick
+chunk_size = 4096
+
+
+def start(network, port):
+    irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    irc.connect((network, port))
+    print irc.recv(chunk_size)
+    irc.send("NICK %s\r\n" % nick)
+    print irc.recv(chunk_size)
+    irc.send("USER %s %s %s %s\r\n" % (
+        username, hostname, servername, realname))
+    print irc.recv(chunk_size)
+    return irc
+
+
+def stop(irc):
+    pass
+
+
+def join(irc, channels):
+    for channel in channels:
+        irc.send("JOIN %s\r\n" % channel)
+        print irc.recv(chunk_size)
+
+
+# channel topic data format:
+# data = {"#uls": "my new topic", "#adytum": "another new topic"}
+def update_channel_topics(irc, data):
+    for channel, topic in data.items():
+        irc.send('TOPIC %s :%s\r\n' % (channel, topic))
+        print irc.recv(chunk_size)
+
+
+def broadcast(irc, channels, message):
+    for channel in channels:
+        irc.send("PRIVMSG %s :%s\r\n" % (channel, message))
+        time.sleep(0.125)
+        print irc.recv(chunk_size)
+
+
+irc = start(network, port)
