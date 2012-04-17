@@ -30,10 +30,21 @@ def getPubKey():
         return Key.fromString(data=publicBlob)
 
 
+class MOTDColoredManhole(manhole.ColoredManhole):
+    """
+    """
+    def initializeScreen(self):
+        manhole.ColoredManhole.initializeScreen(self)
+        self.terminal.write(self.getMOTD())
+
+    def getMOTD(self):
+        return config.ssh.banner or "Welcome to MOTDColoredManhole!"
+
+
 def getShellFactory(namespace=None):
 
     def getManhole(serverProtocol):
-        return manhole.ColoredManhole(namespace)
+        return MOTDColoredManhole(namespace)
 
     if not namespace:
         from pprint import pprint

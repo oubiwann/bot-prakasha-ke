@@ -16,6 +16,20 @@ ssh.keydir = ".publishbot-ssh"
 ssh.privkey = "id_rsa"
 ssh.pubkey = "id_rsa.pub"
 ssh.localdir = "~/.ssh"
+ssh.banner = """
+
+Welcome to
+      ____        _     _ _     _     _           _   
+     |  _ \ _   _| |__ | (_)___| |__ | |__   ___ | |_ 
+     | |_) | | | | '_ \| | / __| '_ \| '_ \ / _ \| __|
+     |  __/| |_| | |_) | | \__ \ | | | |_) | (_) | |_ 
+     |_|    \__,_|_.__/|_|_|___/_| |_|_.__/ \___/ \__|
+
+You are in the publishbot interactive Python shell.
+Type 'dir()' to see the objects in the current namespace.
+
+Enjoy!
+"""
 
 # Listener
 listener = Config()
