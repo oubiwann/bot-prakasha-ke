@@ -81,6 +81,8 @@ class LoggerClient(IRCClient):
         """
         self.loggers[channel].log("[%s (logger bot) has joined %s]" % (
             config.log.nick, channel))
+        self.loggers[channel].log("[The channel topic is '%s']" % (
+            self.topic(channel),))
 
     def privmsg(self, user, channel, msg):
         """
@@ -115,6 +117,15 @@ class LoggerClient(IRCClient):
         new_nick = params[0]
         for logger in self.loggers.values():
             logger.log("%s is now known as %s" % (old_nick, new_nick))
+
+    def irc_TOPIC(self, prefix, params):
+        """
+        Called when an IRC user changes the channel topic.
+        """
+        user = prefix.split("!")[0]
+        channel, new_topic = params
+        self.loggers[channel].log("* %s changed the topic to '%s'" % (
+            user, new_topic))
 
 
 class LoggerFactory(ClientFactory):
