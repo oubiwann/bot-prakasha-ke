@@ -132,8 +132,7 @@ class LoggerClient(IRCClient):
             return
         nick, channel, topic = params
         self.loggers[channel].log(
-            "[Channel topic for %s was set by %s: '%s']" % (
-                channel, nick, topic))
+            "[Channel topic for %s was set as '%s']" % (channel, topic))
         self.initialTopicLogged = True
 
 
