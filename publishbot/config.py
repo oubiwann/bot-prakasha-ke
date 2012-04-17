@@ -34,7 +34,8 @@ log.http.port = 8080
 log.http.docRoot = 'irclogs'
 log.http.vhostEnabled = True
 log.http.vhost= 'localhost'
-log.http.auth = 'basic'
+#log.http.auth = 'basic'
+log.http.auth = None
 log.http.realm = 'Adytum IRC Logs'
 
 # Log web server users
