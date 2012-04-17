@@ -32,12 +32,18 @@ def getPubKey():
 
 def getShellFactory(namespace=None):
 
-    def getManhole(xxx):
-        print "!", xxx
-        return manhole.Manhole(namespace)
+    def getManhole(serverProtocol):
+        return manhole.ColoredManhole(namespace)
 
     if not namespace:
-        namespace = globals()
+        from pprint import pprint
+        import sys
+        namespace = {
+            "os": os, 
+            "sys": sys, 
+            "config": config,
+            "pprint": pprint,
+            }
     realm = manhole_ssh.TerminalRealm() 
     realm.chainedProtocolFactory.protocolFactory = getManhole
 
@@ -45,6 +51,5 @@ def getShellFactory(namespace=None):
     factory = manhole_ssh.ConchFactory(sshPortal)
     factory.privateKeys = {'ssh-rsa': getPrivKey()}
     factory.publicKeys = {'ssh-rsa': getPubKey()}
-    #factory.portal = sshPortal
     factory.portal.registerChecker(SSHPublicKeyDatabase())
     return factory
