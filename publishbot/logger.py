@@ -81,8 +81,8 @@ class LoggerClient(IRCClient):
         """
         self.loggers[channel].log("[%s (logger bot) has joined %s]" % (
             config.log.nick, channel))
-        self.loggers[channel].log("[The channel topic is '%s']" % (
-            self.topic(channel),))
+        self.initialTopicLogged = False
+        self.topic(channel)
 
     def privmsg(self, user, channel, msg):
         """
@@ -126,6 +126,15 @@ class LoggerClient(IRCClient):
         channel, new_topic = params
         self.loggers[channel].log("* %s changed the topic to '%s'" % (
             user, new_topic))
+
+    def irc_RPL_TOPIC(self, prefix, params):
+        if self.initialTopicLogged:
+            return
+        nick, channel, topic = params
+        self.loggers[channel].log(
+            "[Channel topic for %s was set by %s: '%s']" % (
+                channel, nick, topic))
+        self.initialTopicLogged = True
 
 
 class LoggerFactory(ClientFactory):
