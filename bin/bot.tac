@@ -13,13 +13,14 @@ from publishbot.publisher import Listener, PublisherFactory
 application = service.Application("publishbot")
 services = service.IServiceCollection(application)
 
-
+# XXX move these services into publishbot.services
 # setup message server
 serverFactory = ServerFactory()
 serverFactory.protocol = Listener
 serverFactory.publisher = PublisherFactory()
 
 msgServer = internet.TCPServer(config.listener.port, serverFactory)
+msgServer.setName(config.listener.servicename)
 msgServer.setServiceParent(services)
 
 
@@ -30,17 +31,22 @@ if config.irc.sslEnabled:
 else:
     msgService = internet.TCPClient(config.irc.server, config.irc.port,
         serverFactory.publisher)
+msgService.setName(config.irc.servicename)
 msgService.setServiceParent(services)
 
 
-# setup IRC log clients and log rotators
+# setup IRC log client
 logger = LoggerFactory(config.irc.server, config.log.channels)
 logService = internet.TCPClient(config.irc.server, config.irc.port,
     logger)
-logService.setName('logService')
+logService.setName(config.log.servicename)
 logService.setServiceParent(services)
-rotService = internet.TimerService(config.log.rotateCheckInterval,
+
+
+# setuplog rotator
+rotService = internet.TimerService(config.log.rotate.checkInterval,
     logger.rotateLogs, logService)
+rotService.setName(config.log.rotate.servicename)
 rotService.setServiceParent(services)
 
 
@@ -56,10 +62,12 @@ if config.log.http.auth == 'basic':
 else:
     site = server.Site(webroot)
 webserver = internet.TCPServer(config.log.http.port, site)
+webserver.setName(config.log.http.servicename)
 webserver.setServiceParent(services)
 
 
 # setup ssh access to a Python shell
-sshFactory = shell.getShellFactory()
-sshserver = internet.TCPServer(config.ssh.port, shell.getShellFactory())
+sshFactory = shell.getShellFactory(app=application, services=services)
+sshserver = internet.TCPServer(config.ssh.port, sshFactory)
+sshserver.setName(config.ssh.servicename)
 sshserver.setServiceParent(services)

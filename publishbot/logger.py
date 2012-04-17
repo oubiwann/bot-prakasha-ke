@@ -161,7 +161,7 @@ class LoggerFactory(ClientFactory):
         ClientFactory.startFactory(self, *args, **kwds)
 
     def getRotateTime(self):
-        time = config.log.rotateTime.split(':')
+        time = config.log.rotate.time.split(':')
         return tuple([int(x) for x in time])
 
     def rotateLogs(self, service):
@@ -179,7 +179,7 @@ class LoggerFactory(ClientFactory):
         diff = now - last
         diffInSeconds = (diff.days * 60 * 60 * 24) + diff.seconds
         elapsedHours = (diffInSeconds) /60. /60.
-        timeCheck = config.log.maxAgeHours
+        timeCheck = config.log.rotate.maxAgeHours
         if elapsedHours >= timeCheck:
             print "Elapsed time (%s) is more than %s hours; resetting..." % (
                 elapsedHours, timeCheck)

@@ -1,7 +1,8 @@
 # IRC
 class Config(object): pass
 irc = Config()
-irc.nick = 'loudmouth'
+irc.servicename = "IRC Client"
+irc.nick = 'vox-publishbot'
 irc.server = 'irc.freenode.net'
 irc.port = 6667
 irc.serverPassword = None
@@ -10,6 +11,7 @@ irc.lineRate = 1
 
 # Internal SSH Server
 ssh = Config()
+ssh.servicename = "SSH Server"
 ssh.port = 6622
 ssh.username = "root"
 ssh.keydir = ".publishbot-ssh"
@@ -33,20 +35,27 @@ Enjoy!
 
 # Listener
 listener = Config()
+listener.servicename = "Message Service"
 listener.host = "127.0.0.1"
 listener.port = 6666
 listener.password = 'ircb0tz'
 
 # Log
 log = Config()
+log.servicename = "Logger Service"
 log.nick = 'publishbot'
 log.channels = ["#adytum", "#adytum-test"]
-log.rotateCheckInterval = 60
-log.rotateTime = '00:00'
-log.maxAgeHours = 24
+
+# Log rotater
+log.rotate = Config()
+log.rotate.servicename = "Log Rotator Service"
+log.rotate.checkInterval = 60
+log.rotate.time = '00:00'
+log.rotate.maxAgeHours = 24
 
 # Log web server
 log.http = Config()
+log.http.servicename = "Log Browser"
 log.http.port = 6680
 log.http.docRoot = 'irclogs'
 log.http.vhostEnabled = True
