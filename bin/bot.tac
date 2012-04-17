@@ -5,13 +5,14 @@ from twisted.application import service, internet
 from twisted.internet.protocol import ServerFactory
 from twisted.internet.ssl import ClientContextFactory
 
-from publishbot import auth, config
+from publishbot import auth, config, shell
 from publishbot.logger import LoggerFactory
 from publishbot.publisher import Listener, PublisherFactory
 
 
 application = service.Application("publishbot")
 services = service.IServiceCollection(application)
+
 
 # setup message server
 serverFactory = ServerFactory()
@@ -20,6 +21,7 @@ serverFactory.publisher = PublisherFactory()
 
 msgServer = internet.TCPServer(config.listener.port, serverFactory)
 msgServer.setServiceParent(services)
+
 
 # setup IRC message client
 if config.irc.sslEnabled:
@@ -30,6 +32,7 @@ else:
         serverFactory.publisher)
 msgService.setServiceParent(services)
 
+
 # setup IRC log clients and log rotators
 logger = LoggerFactory(config.irc.server, config.log.channels)
 logService = internet.TCPClient(config.irc.server, config.irc.port,
@@ -39,6 +42,7 @@ logService.setServiceParent(services)
 rotService = internet.TimerService(config.log.rotateCheckInterval,
     logger.rotateLogs, logService)
 rotService.setServiceParent(services)
+
 
 # setup log file web server
 webroot = static.File(config.log.http.docRoot)
@@ -53,3 +57,9 @@ else:
     site = server.Site(webroot)
 webserver = internet.TCPServer(config.log.http.port, site)
 webserver.setServiceParent(services)
+
+
+# setup ssh access to a Python shell
+sshFactory = shell.getShellFactory()
+sshserver = internet.TCPServer(config.ssh.port, shell.getShellFactory())
+sshserver.setServiceParent(services)
