@@ -82,7 +82,7 @@ class CommandAPI(object):
         """
         Set a channel's topic.
         """
-        self.topic(channel, topic)
+        self.publisher.topic(channel, topic)
 
     def _setTopic(self, channel, topic, say=False):
         self.setTopic(channel, topic)
