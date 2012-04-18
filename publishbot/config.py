@@ -46,7 +46,7 @@ log.servicename = "Logger Service"
 log.nick = 'publishbot'
 log.channels = ["#adytum", "#adytum-test"]
 
-# Log rotater
+# Log rotator
 log.rotate = Config()
 log.rotate.servicename = "Log Rotator Service"
 log.rotate.checkInterval = 60
