@@ -78,14 +78,11 @@ class CommandAPI(object):
         for channel in self.channels:
             self.say(channel, message)
 
-    def setTopic(self, channel, topic):
+    def setTopic(self, channel, topic, say=False):
         """
         Set a channel's topic.
         """
         self.publisher.topic(channel, topic)
-
-    def _setTopic(self, channel, topic, say=False):
-        self.setTopic(channel, topic)
         if say:
             msg = "Channel topic change: %s" % topic
             self.say(channel, msg)
@@ -98,7 +95,7 @@ class CommandAPI(object):
         will also be sent as a public message on the channel.
         """
         for channel, topic in data.items():
-            self._setTopic(channel, topic, say)
+            self.setTopic(channel, topic, say)
 
     def setAllTopics(self, topic, say=False):
         """
@@ -107,7 +104,7 @@ class CommandAPI(object):
         channel.
         """
         for channel in self.channels:
-            self._setTopic(channel, topic, say)
+            self.setTopic(channel, topic, say)
 
 
 def updateNamespace(namespace):
