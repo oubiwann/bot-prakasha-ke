@@ -52,16 +52,28 @@ class CommandAPI(object):
         for channel in self.channels:
             self.publisher.join(channel)
 
+    def say(self, channel, message):
+        self.publisher.say(channel, message)
+
+    def sayAll(self, data, broadcastMessage=""):
+        for channel, message in data.items():
+            if broadcastMessage:
+                message = broadcastMessage
+            self.say(channel, message)
+
     def broadcast(self, message):
         for channel in self.channels:
-            self.publisher.say(channel, message)
+            self.say(channel, message)
 
     def setTopic(self, channel, topic):
-        self.publisher.topic(channel, topic)
+        self.topic(channel, topic)
 
-    def setAllTopics(self, data):
+    def setAllTopics(self, data, say=False):
         for channel, topic in data.items():
             self.setTopic(channel, topic)
+            if say:
+                msg = "Channel topic change: %s" % topic
+                self.say(channel, msg)
 
 
 def updateNamespace(namespace):
@@ -83,13 +95,15 @@ def updateNamespace(namespace):
     commands = CommandAPI(loggerFactory, publisher)
     commands.joinAll()
     namespace.update({
-        "os": os, 
-        "sys": sys, 
+        "os": os,
+        "sys": sys,
         "config": config,
         "pprint": pprint,
         "banner": banner,
         "info": banner,
         "publisher": publisher,
+        "say": commands.say,
+        "sayAll": commands.sayAll,
         "broadcast": commands.broadcast,
         "setTopic": commands.setTopic,
         "setAllTopics": commands.setAllTopics,
@@ -102,7 +116,7 @@ def getShellFactory(**namespace):
     def getManhole(serverProtocol):
         return MOTDColoredManhole(updateNamespace(namespace))
 
-    realm = manhole_ssh.TerminalRealm() 
+    realm = manhole_ssh.TerminalRealm()
     realm.chainedProtocolFactory.protocolFactory = getManhole
     sshPortal = portal.Portal(realm)
     factory = manhole_ssh.ConchFactory(sshPortal)
