@@ -24,3 +24,9 @@ New Features
 * add instructions for setting up keys
 
 * try to see if ssh -p 6622 localhost "command" works
+
+* move configuration out of python file and into config ini or yaml
+
+* use ~/.bot-prakasha/config.ini as config location
+
+* rename ./bin/bot.tac to ./bin/bot-prakasha.tac
