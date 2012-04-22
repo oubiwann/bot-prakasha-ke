@@ -12,6 +12,21 @@ bzr-2-git:
 	git remote add origin git@$(GITHUB_REPO)
 	git push -u origin master
 
+log-concise:
+	git log --oneline
+
+log-verbose:
+	git log --format=fuller
+
+log-authors:
+	git log --format='%aN %aE' --date=short
+
+log-authors-date:
+	git log --format='%ad %aN %aE' --date=short
+
+log-changes:
+	git log --format='%ad %n* %B %N%n' --date=short
+
 clean:
 	find ./ -name "*~" -exec rm {} \;
 	find ./ -name "*.pyc" -exec rm {} \;
