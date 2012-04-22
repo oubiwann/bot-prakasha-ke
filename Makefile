@@ -37,11 +37,11 @@ commit: msg
 push:
 	git push --all git@$(GITHUB_REPO)
 	bzr push $(LP_REPO)
-	git push --all https://$(GOOGLE_REPO)
+#	git push --all https://$(GOOGLE_REPO)
 
 push-tags:
 	git push --tags git@$(GITHUB_REPO)
-	git push --tags https://$(GOOGLE_REPO)
+#	git push --tags https://$(GOOGLE_REPO)
 
 push-all: push push-tags
 .PHONY: push-all
@@ -73,6 +73,7 @@ status: stat
 
 todo:
 	git grep -n -i -2 XXX
+	git grep -n -i -2 TODO
 .PHONY: todo
 
 build:
@@ -111,9 +112,9 @@ virtual-build: clean build
 	@. $(DIR)/bin/activate
 	-test -e $(DIR)/bin/twistd || $(DIR)/bin/pip install twisted
 	-test -e $(DIR)/bin/rst2html.py || $(DIR)/bin/pip install docutils
-	$(DIR)/bin/pip uninstall -vy txJSON_RPC
-	rm -rf $(DIR)/lib/python2.7/site-packages/txJSON*
-	$(DIR)/bin/easy_install-2.7 ./dist/txJSON*
+	$(DIR)/bin/pip uninstall -vy $(PKG_NAME)
+	rm -rf $(DIR)/lib/python2.7/site-packages/$(PKG_NAME)*
+	$(DIR)/bin/easy_install-2.7 ./dist/$(PKG_NAME)*
 
 clean-virt: clean
 	rm -rf $(VIRT_DIR)
