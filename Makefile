@@ -9,7 +9,7 @@ VIRT_DIR ?= .bot-prakasha-ke-venv
 
 bzr-2-git:
 	git init && bzr fast-export `pwd` | git fast-import && git reset HEAD
-	git remote add origin $(GITHUB_REPO)
+	git remote add origin git@$(GITHUB_REPO)
 	git push -u origin master
 
 clean:
