@@ -1,3 +1,8 @@
 twistd.*
 irclogs
+*.egg-info
 *.pyc
+build
+dist
+.DS_Store
+.gitignore
