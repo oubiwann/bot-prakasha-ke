@@ -1,5 +1,7 @@
 2012-04-21
 
+* Added Hinglish font "bot" images.
+* Updated banner in configuration.
 * Tweaked Makefile.
 * Added a setup.py file.
 * Added distutil wrappers.
