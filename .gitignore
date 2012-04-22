@@ -9,3 +9,4 @@ dist
 *.sw[op]
 *.~*~
 .bzr
+*.backup

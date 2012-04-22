@@ -5,9 +5,22 @@ TODO
 Known Issues
 ------------
 
-* 
+*
 
 New Features
 ------------
 
-* 
+* add in-line image (logo) to README
+
+* add notes in README about launchpad project URL, blueprint usage, code repos,
+  etc.
+
+* fix usage notes
+
+* update deps (after running in virtual env to identify all of them)
+
+* rename package from publishbot to prakasha
+
+* add instructions for setting up keys
+
+* try to see if ssh -p 6622 localhost "command" works

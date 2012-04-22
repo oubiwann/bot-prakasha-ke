@@ -1,9 +1,13 @@
 Publish-Bot
 -----------
 
-Publish-Bot is an IRC bot which simply listens on a TCP port and
-relays messages to IRC. It's meant for applications which want to
-notify IRC channels of events without implementing their own IRC code.
+Publish-Bot is an IRC bot which does the following:
+ * connects to arbitrary channels on an IRC host
+ * logs those channels (topics and conversations)
+ * broadcasts messages or changes topics
+ * offers a web service view viewing recorded logs
+ * offers an ssh service into the running bot for batch-updating channel topics
+   or broadcasting messages
 
 To start a publish-bot service, first edit config.py and then run
 `twistd -y bot.tac'.

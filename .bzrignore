@@ -8,3 +8,5 @@ dist
 *.sw[po]
 *.~*~
 .git
+.gitignore
+*.backup
