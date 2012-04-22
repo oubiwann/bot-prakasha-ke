@@ -6,3 +6,6 @@ build
 dist
 .DS_Store
 .bzrignore
+*.sw[op]
+*.~*~
+.bzr
