@@ -5,7 +5,6 @@ irclogs
 build
 dist
 .DS_Store
-.gitignore
 *.sw[po]
 *.~*~
 .git
