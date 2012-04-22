@@ -1,0 +1,170 @@
+2012-04-21
+
+* Tweaked Makefile.
+* Added a setup.py file.
+* Added distutil wrappers.
+* Added a meta file.
+* Added git ignore file.
+* Updated ignores.
+* Changed docs to ReST files.
+* Added TODO and docs.
+* Various admin updates.
+* Added another .ignore option as well as a Makefile.
+* Renamed README from .txt to .rst.
+* Added project logos.
+
+2012-04-17
+
+* More tweaks to the API.
+* Fixed bad call to topic.
+* Renamed methods.
+* Added new methods.
+* Added docstrings.
+* Added more CommandAPI methods and placed them in the default namespace.
+* Added a command api for use inside the publishbot shell (via ssh).
+* Converted all services to named services.
+* Separated logger and rotator in config and service setup.
+* Added support for MOTD or a banner, though there's still a clearscreen
+  happening (in order to currently see the banner, you have to scroll up).
+* Cleaned up namespace for SSH Python shell.
+* Added support for SSH'ing into publishbot.
+* Turns out the nick is that of who's logged in, not who actually set the
+  topic.
+* Added config options for SSH and tweaked port numbers.
+* Added more support for displaying what a channel's topic was.
+* First attempt at getting topic changes logged.
+* Playing around with some shell possibilities. Probably going to delete this
+  and use a conch shell.
+
+2012-04-16
+
+* Added a script to generate SSH keys.
+* Added some quick scripting for a raw IRC client.
+
+
+2012-04-11
+
+* Changed the nick of the logger.
+* Added a .bzrignore file.
+* This one had the most changed of all the old modules. Since this was
+  originally written, Twisted has added built-in support for BasicAuth and has
+  added the web2 stuff to web (thus changing the old web API, module imports,
+  etc.).
+* More formatting and another move into the new package.
+* Tweaked the formatting and moved the module.
+* Moved the config module and updated some of the options.
+* Moved the committer code into the new package.
+* Created a new package for the codebase.
+* Created a bin dir and moved tjhe tac file in there.
+
+
+2007-09-03
+
+* Ooops; should be 24 hours by default, not 12.
+* Added support for basic auth and updated bot.tac accordingly.
+
+2007-09-02
+
+* Removed needless classes from config file.
+
+2007-08-23
+
+* Removed hard-coded 24 hour time check.
+* Made time of rotation configurable, removing hard-coded 'midnight' as the
+  only option.
+
+2007-08-19
+
+* Removed commented debugging code.
+* Fixed math for 'hoursAgo' variable.
+
+2007-08-18
+
+* Split up logger and publisher code into different modules.
+* Formatting changes.
+* Code shuffling.
+* Debgging statements.
+
+2007-08-17
+
+* Changed the directory structure of the logfiles a little bit, so as to be
+  more readable.
+* Fixed log rotation issues.
+* Removed the crappy code that created a client/connection for every channel;
+  the code now creates one connection for the irc server.
+* Got log rotation partially working.
+* Added logging support.
+* Added vhost web server support.
+* Created a publisher factory and removed the corresponding code from the .tac
+* Added log configuration
+* Added docstring for listener.
+* Redid configuration user use object attrs instead of constants.
+* Created branch of radix's publish-bot.
+
+2007-06-13
+
+* use ReconnectingClientFactory for more resilient IRC connections.
+
+
+2007-05-10
+
+* Oops, README.txt thought the post commit function was "post_commit" but it
+  was "send_commit".
+
+2007-03-20
+
+* merge jkakar's error-handling of socket.connect.
+* Added try/except block around socket.connect() call. If a connection
+  can't be opened a useful message is printed (instead of a traceback).
+
+
+2007-03-08
+
+* Merge branch-prefix from jamu. Thanks.
+* message_branch_prefix configuration parameter helps disambiguate
+  which project a branch belongs to.
+* Updated README to include details about the new parameter.
+
+
+2007-02-28
+
+* Merge jkakar's thing that adsd a # to the front of the channel name to avoid
+  quatation
+
+
+2007-02-27
+
+* Merged trunk.
+* The bzr plugin adds hash marks to IRC channel names to work around a
+  bug that occurs when ~/.bazaar/locations is rewritten.
+* Updated README.txt with instructions to NOT include a hash mark in
+  IRC channel names.
+
+
+2007-02-20
+
+* include jamu's changes to the message format
+
+
+2007-02-15
+
+* Fixed broken string interpolation argument ordering.
+* Updated notification message to read as a sentence.
+* New message shows e-mail address, branch nick and revision number,
+  with commit message following.
+
+2007-02-14
+
+* and more
+* make the README file even better
+* hooray! use bzr branch config data instead of hacking .py files
+
+2007-02-09
+
+* efficiencyyyyy
+* way better commit messages.
+* reliably send data
+* split over lines
+* add the bzr commit message plugin and a README
+* print more diagnostic stuff to the log in the Listener
+* initial import - IT WORKS
