@@ -1,3 +1,6 @@
+from ConfigParser import SafeConfigParser
+
+
 # IRC
 class Config(object): pass
 irc = Config()
@@ -86,3 +89,17 @@ log.http.users = {
     'Jojo': 'c1rcu5b0y',
     }
 log.http.userdb = "httpd.password"
+
+
+def buildDefault():
+    config = SafeConfigParser()
+    config.add_section("IRC")
+    config.add_section("SSH")
+    config.add_section("Listener")
+    config.add_section("HTTP")
+    config.add_section("Logger")
+    return config
+
+
+def writeDefaults():
+    with    
