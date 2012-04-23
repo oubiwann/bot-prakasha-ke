@@ -2,6 +2,8 @@
 
 * Added support for ini files (local dir and user home dir).
 * Added a make target for importing bzr into a git checkout.
+* Added make target for adding files to both bzr and git.
+* Added convenience scripts for starting and stopping the bot server.
 
 2012-04-22
 

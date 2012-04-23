@@ -18,6 +18,11 @@ import-bzr:
 	mv bzr-tmp/.bzr .
 	rm -rf bzr-tmp
 
+add: FILES =
+add:
+	git add $(FILES)
+	bzr add $(FILES)
+
 log-concise:
 	git log --oneline
 
