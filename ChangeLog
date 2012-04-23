@@ -1,6 +1,7 @@
 2012-04-23
 
 * Added support for ini files (local dir and user home dir).
+* Added a make target for importing bzr into a git checkout.
 
 2012-04-22
 

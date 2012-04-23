@@ -13,6 +13,11 @@ bzr-2-git:
 	git remote add origin git@$(GITHUB_REPO)
 	git push -u origin master
 
+import-bzr:
+	bzr branch $(LP_REPO) bzr-tmp
+	mv bzr-tmp/.bzr .
+	rm -rf bzr-tmp
+
 log-concise:
 	git log --oneline
 
