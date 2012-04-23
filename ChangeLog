@@ -4,6 +4,7 @@
 * Added a make target for importing bzr into a git checkout.
 * Added make target for adding files to both bzr and git.
 * Added convenience scripts for starting and stopping the bot server.
+* Added a make target for updating git and bzr.
 
 2012-04-22
 

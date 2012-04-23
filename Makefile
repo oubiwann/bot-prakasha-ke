@@ -14,6 +14,7 @@ bzr-2-git:
 	git push -u origin master
 
 import-bzr:
+	rm -rf .bzr
 	bzr branch $(LP_REPO) bzr-tmp
 	mv bzr-tmp/.bzr .
 	rm -rf bzr-tmp
@@ -22,6 +23,10 @@ add: FILES =
 add:
 	git add $(FILES)
 	bzr add $(FILES)
+
+update: import-bzr
+	git pull
+
 
 log-concise:
 	git log --oneline
