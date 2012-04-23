@@ -8,6 +8,9 @@
 * Added an exceptions module.
 * Updated the key-getter to raise a custom exception if the server keys aren't
   present (and to give instructions on how to generate them).
+* Added support for executing commands via the ssh command, such as:
+    $ ssh -p 6622 "say('#adytum', 'wassup?')"
+* Added new custom exception for commands that aren't defined in the namespace.
 
 2012-04-21
 

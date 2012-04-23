@@ -14,7 +14,8 @@ from zope.interface import implements
 from prakasha import config
 from prakasha import exceptions
 
-
+# XXX condense the redundant logic of these next to functions into one private
+# function that the public two can use
 def getPrivKey():
     privKeyPath = os.path.join(
         config.ssh.keydir, config.ssh.privkey)
@@ -44,6 +45,30 @@ class MOTDColoredManhole(manhole.ColoredManhole):
 
     def getMOTD(self):
         return config.ssh.banner or "Welcome to MOTDColoredManhole!"
+
+
+class ExecutingTerminalSession(manhole_ssh.TerminalSession):
+    """
+    """
+    def execCommand(self, proto, cmd):
+        avatar = proto.session.avatar
+        namespace = updateNamespace(proto.session.session.namespace)
+        try:
+            result = eval(cmd, namespace)
+        except NameError:
+            command = cmd.split("(")[0]
+            msg = "Command '%s' not found in namespace!" % command
+            raise exceptions.IllegalAPICommand(msg)
+        avatar.conn.transport.loseConnection()
+
+
+class ExecutingTerminalRealm(manhole_ssh.TerminalRealm):
+    """
+    """
+    sessionFactory = ExecutingTerminalSession
+
+    def __init__(self, namespace):
+        self.sessionFactory.namespace = namespace
 
 
 class CommandAPI(object):
@@ -153,7 +178,7 @@ def getShellFactory(**namespace):
     def getManhole(serverProtocol):
         return MOTDColoredManhole(updateNamespace(namespace))
 
-    realm = manhole_ssh.TerminalRealm()
+    realm = ExecutingTerminalRealm(namespace)
     realm.chainedProtocolFactory.protocolFactory = getManhole
     sshPortal = portal.Portal(realm)
     factory = manhole_ssh.ConchFactory(sshPortal)
