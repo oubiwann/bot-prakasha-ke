@@ -94,7 +94,7 @@ def catReST(*args, **kwds):
     # http://docs.python.org/dist/meta-data.html
     tmp = []
     for arg in args:
-        if arg in legalReSTFiles or arg.endswith(".txt"):
+        if arg in legalReSTFiles or arg.endswith((".txt", ".rst")):
             f = open(os.path.join(*arg.split("/")))
             tmp.append(f.read())
             f.close()

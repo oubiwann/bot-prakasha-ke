@@ -1,5 +1,12 @@
 2012-04-21
 
+* Update dist util module to use .txt or .rst.
+* Changed setup.py to point to the .rst docs.
+* Fixed the Makefile to do "check" against the lib name, not the project name.
+* Added more TODO items.
+
+2012-04-21
+
 * More TODO changes.
 * Started on README changes.
 * Updated TODO.

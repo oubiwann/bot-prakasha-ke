@@ -13,7 +13,7 @@ New Features
 * add in-line image (logo) to README
 
 * add notes in README about launchpad project URL, blueprint usage, code repos,
-  etc.
+  where to submit bugs, patches, etc.
 
 * fix usage notes
 
@@ -30,3 +30,13 @@ New Features
 * use ~/.bot-prakasha/config.ini as config location
 
 * rename ./bin/bot.tac to ./bin/bot-prakasha.tac
+
+* rename "vox-publishbot" nick to something like "prakasha-bot"
+
+* rename "publishbot" nick to something like "prakasha-log"
+
+* fix initial screen re-draw after login with terminal.app on Mac OS X
+
+* add support for scheduling messages
+
+* add support for setting/updating the bot's schedule

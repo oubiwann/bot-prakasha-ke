@@ -1,4 +1,5 @@
 PROJ := bot-prakasha-ke
+LIB := publishbot
 GITHUB_REPO := github.com:dreamhost/$(PROJ).git
 #GOOGLE_REPO := code.google.com/p/$(PROJ)
 LP_REPO := lp:$(PROJ)
@@ -110,7 +111,7 @@ check-dist:
 	@echo "Need to fill this in ..."
 
 check: build check-docs check-examples
-	trial $(PROJ)
+	trial $(LIB)
 
 check-integration:
 # placeholder for integration tests
