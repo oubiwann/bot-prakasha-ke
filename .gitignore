@@ -12,3 +12,4 @@ dist
 *.backup
 .prakasha-ssh
 MSG
+.venv

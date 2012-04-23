@@ -5,6 +5,8 @@
 * Added make target for adding files to both bzr and git.
 * Added convenience scripts for starting and stopping the bot server.
 * Added a make target for updating git and bzr.
+* Updated the README with "getting started" instructions.
+* Updated the setup.py with deps.
 
 2012-04-22
 

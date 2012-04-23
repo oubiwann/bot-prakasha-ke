@@ -23,6 +23,13 @@ setup(
         "docs/HISTORY.rst",
         stop_on_errors=True,
         out=True),
+    install_requires=[
+        "twisted",
+        "PyOpenSSL",
+        "pycrypto",
+        "pyasn1",
+        "docutils",
+        ],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
