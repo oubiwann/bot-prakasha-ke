@@ -1,4 +1,8 @@
-2012-04-21
+2012-04-23
+
+* Added support for ini files (local dir and user home dir).
+
+2012-04-22
 
 * Update dist util module to use .txt or .rst.
 * Changed setup.py to point to the .rst docs.
