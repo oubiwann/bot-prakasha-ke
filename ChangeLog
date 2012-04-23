@@ -11,6 +11,7 @@
 * Added support for executing commands via the ssh command, such as:
     $ ssh -p 6622 "say('#adytum', 'wassup?')"
 * Added new custom exception for commands that aren't defined in the namespace.
+* Added windowChanged method.
 
 2012-04-21
 

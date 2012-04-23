@@ -30,3 +30,8 @@ New Features
 * add support for scheduling messages
 
 * add support for setting/updating the bot's schedule
+
+* add support for passing JSON as a command, e.g.:
+  $ ssh -p 6622 localhost "<json * data>"
+
+* add tab-completion

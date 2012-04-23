@@ -7,7 +7,7 @@ from twisted.conch import manhole, manhole_ssh
 from twisted.conch.checkers import SSHPublicKeyDatabase
 from twisted.conch.ssh.factory import SSHFactory
 from twisted.conch.ssh.keys import Key
-from twisted.python import failure
+from twisted.python import failure, log
 
 from zope.interface import implements
 
@@ -50,6 +50,9 @@ class MOTDColoredManhole(manhole.ColoredManhole):
 class ExecutingTerminalSession(manhole_ssh.TerminalSession):
     """
     """
+    def windowChanged(self, coords):
+        log.msg("New coordinates: %s" % str(coords))
+
     def execCommand(self, proto, cmd):
         avatar = proto.session.avatar
         namespace = updateNamespace(proto.session.session.namespace)
