@@ -8,6 +8,22 @@ MSG_FILE ?= MSG
 TMP_FILE ?= /tmp/MSG
 VIRT_DIR ?= .bot-prakasha-ke-venv
 
+run:
+	twistd -noy bin/bot-prakasha.tac
+
+daemonize:
+	twistd -y bin/bot-prakasha.tac
+
+shell:
+	ssh -p 6622 127.0.0.1
+
+stop:
+	kill `cat twistd.pid`
+
+generate-config:
+	rm -rf ~/.prakasha-bot/config.ini
+	python -c "from prakasha import config; config.writeDefaults();"
+
 bzr-2-git:
 	git init && bzr fast-export `pwd` | git fast-import && git reset HEAD
 	git remote add origin git@$(GITHUB_REPO)
@@ -24,9 +40,14 @@ add:
 	git add $(FILES)
 	bzr add $(FILES)
 
+remove: FILE =
+remove:
+	#cp $(file) $(file).bak
+	git rm $(FILE)
+	bzr rm $(FILE)
+
 update: import-bzr
 	git pull
-
 
 log-concise:
 	git log --oneline

@@ -33,35 +33,35 @@ ssh.privkey = "id_rsa"
 ssh.pubkey = "id_rsa.pub"
 ssh.localdir = "~/.ssh"
 ssh.banner = """
-
-Welcome to
-
-     .;@@
-       .@@@
-         @@@                                 +'
-         '@@;                                +@@`
-       ::,@@@::::::::::::::::::::::::::::::::#@@::::::::,
-       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
-          @@@                       @@@      +@@`
-          @@@    '#+,        `#@@@#,@@@      +@@`
-          @@@ .@@@@@@@+    `@@@@@'.`:@@      +@@`
-          @@@@.    .@@@@  .@@@@       @@     +@@`
-          @@@        ;@@` @@@'        `@@    +@@`
-          @@@@`       `@  +@`        `@@@    +@@`   @
-          @@@@@:      @    #,       '@@@'    +@@`   @@@
-          @@#+@@@.   @      `+   `#@@@@+      @@.  ,@@.
-          #@#  @@@@@          `#@@@@@#         @@'#@#
-
-                        __            __          __
-         ___  _______ _/ /_____ ____ / /  ___ _  / /_____
-        / _ \/ __/ _ `/  '_/ _ `(_-</ _ \/ _ `/ /  '_/ -_)
-       / .__/_/  \_,_/_/\_\\\\_,_/___/_//_/\_,_/ /_/\_\\\\__/
-      /_/
-
-You are in the prakasha interactive Python shell.
-Type 'dir()' to see the objects in the current namespace.
-
-Enjoy!
+:
+: Welcome to
+:
+:    .;@@
+:      .@@@
+:        @@@                                 +'
+:        '@@;                                +@@`
+:      ::,@@@::::::::::::::::::::::::::::::::#@@::::::::,
+:      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+:         @@@                       @@@      +@@`
+:         @@@    '#+,        `#@@@#,@@@      +@@`
+:         @@@ .@@@@@@@+    `@@@@@'.`:@@      +@@`
+:         @@@@.    .@@@@  .@@@@       @@     +@@`
+:         @@@        ;@@` @@@'        `@@    +@@`
+:         @@@@`       `@  +@`        `@@@    +@@`   @
+:         @@@@@:      @    #,       '@@@'    +@@`   @@@
+:         @@#+@@@.   @      `+   `#@@@@+      @@.  ,@@.
+:         #@#  @@@@@          `#@@@@@#         @@'#@#
+:
+:                       __            __          __
+:        ___  _______ _/ /_____ ____ / /  ___ _  / /_____
+:       / _ \/ __/ _ `/  '_/ _ `(_-</ _ \/ _ `/ /  '_/ -_)
+:      / .__/_/  \_,_/_/\_\\\\_,_/___/_//_/\_,_/ /_/\_\\\\__/
+:     /_/
+:
+: You are in the prakasha interactive Python shell.
+: Type 'dir()' to see the objects in the current namespace.
+:
+: Enjoy!
 """
 
 # Listener
@@ -174,7 +174,7 @@ def updateConfig():
 
     # IRC
     irc.servicename = config.get("IRC", "servicename")
-    irc.nick = config.get("IRC", "nick")
+    irc.nick = str(config.get("IRC", "nick"))
     irc.server = config.get("IRC", "server")
     irc.port = int(config.get("IRC", "port"))
     irc.serverPassword = config.get("IRC", "serverPassword") or None
@@ -184,12 +184,12 @@ def updateConfig():
     # Internal SSH Server
     ssh.servicename = config.get("SSH", "servicename")
     ssh.port = int(config.get("SSH", "port"))
-    ssh.username = config.get("SSH", "username")
+    ssh.username = str(config.get("SSH", "username"))
     ssh.keydir = config.get("SSH", "keydir")
     ssh.privkey = config.get("SSH", "privkey")
     ssh.pubkey = config.get("SSH", "pubkey")
     ssh.localdir = config.get("SSH", "localdir")
-    ssh.banner = config.get("SSH", "banner")
+    ssh.banner = str(config.get("SSH", "banner"))
 
     # Listener
     listener.servicename = config.get("Listener", "servicename")
@@ -199,8 +199,9 @@ def updateConfig():
 
     # Log
     log.servicename = config.get("Logger", "servicename")
-    log.nick = config.get("Logger", "nick")
-    log.channels = json.loads(config.get("Logger", "channels"))
+    log.nick = str(config.get("Logger", "nick"))
+    log.channels = [str(x) for x in
+                    json.loads(config.get("Logger", "channels"))]
 
     # Log rotator
     log.rotate.servicename = config.get("Rotator", "servicename")
@@ -228,6 +229,7 @@ if not os.path.exists(configFile):
 updateConfig()
 
 
-del SafeConfigParser, json, os
+#del SafeConfigParser, json, os
 del Config
-del buildDefaults, configFile, getConfigFile, updateConfig, writeDefaults
+#del buildDefaults, configFile, getConfigFile, updateConfig, writeDefaults
+del configFile, updateConfig

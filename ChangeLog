@@ -7,6 +7,8 @@
 * Added a make target for updating git and bzr.
 * Updated the README with "getting started" instructions.
 * Updated the setup.py with deps.
+* Moved the util scripts to make targets and added more make targets.
+* Updated config file to convert unicode to str where necessary (for IRC).
 
 2012-04-22
 
