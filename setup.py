@@ -1,7 +1,7 @@
 from setuptools import setup
 
-from publishbot import meta
-from publishbot.util import dist
+from prakasha import meta
+from prakasha.util import dist
 
 
 setup(

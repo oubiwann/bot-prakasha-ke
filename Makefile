@@ -1,5 +1,5 @@
 PROJ := bot-prakasha-ke
-LIB := publishbot
+LIB := prakasha
 GITHUB_REPO := github.com:dreamhost/$(PROJ).git
 #GOOGLE_REPO := code.google.com/p/$(PROJ)
 LP_REPO := lp:$(PROJ)

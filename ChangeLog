@@ -4,6 +4,10 @@
 * Changed setup.py to point to the .rst docs.
 * Fixed the Makefile to do "check" against the lib name, not the project name.
 * Added more TODO items.
+* Renamed all internal references of publishbot to prakasha.
+* Added an exceptions module.
+* Updated the key-getter to raise a custom exception if the server keys aren't
+  present (and to give instructions on how to generate them).
 
 2012-04-21
 

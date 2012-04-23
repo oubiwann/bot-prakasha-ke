@@ -2,7 +2,7 @@
 class Config(object): pass
 irc = Config()
 irc.servicename = "IRC Client"
-irc.nick = 'vox-publishbot'
+irc.nick = 'prakasha-bot'
 irc.server = 'irc.freenode.net'
 irc.port = 6667
 irc.serverPassword = None
@@ -14,7 +14,7 @@ ssh = Config()
 ssh.servicename = "SSH Server"
 ssh.port = 6622
 ssh.username = "root"
-ssh.keydir = ".publishbot-ssh"
+ssh.keydir = ".prakasha-ssh"
 ssh.privkey = "id_rsa"
 ssh.pubkey = "id_rsa.pub"
 ssh.localdir = "~/.ssh"
@@ -41,10 +41,10 @@ Welcome to
                         __            __          __
          ___  _______ _/ /_____ ____ / /  ___ _  / /_____
         / _ \/ __/ _ `/  '_/ _ `(_-</ _ \/ _ `/ /  '_/ -_)
-       / .__/_/  \_,_/_/\_\\_,_/___/_//_/\_,_/ /_/\_\\__/
+       / .__/_/  \_,_/_/\_\\\\_,_/___/_//_/\_,_/ /_/\_\\\\__/
       /_/
 
-You are in the publishbot interactive Python shell.
+You are in the prakasha interactive Python shell.
 Type 'dir()' to see the objects in the current namespace.
 
 Enjoy!
@@ -60,7 +60,7 @@ listener.password = 'ircb0tz'
 # Log
 log = Config()
 log.servicename = "Logger Service"
-log.nick = 'publishbot'
+log.nick = 'prakasha-log'
 log.channels = ["#adytum", "#adytum-test"]
 
 # Log rotator
@@ -79,7 +79,7 @@ log.http.vhostEnabled = True
 log.http.vhost= 'localhost'
 #log.http.auth = 'basic'
 log.http.auth = None
-log.http.realm = 'Adytum IRC Logs'
+log.http.realm = 'bot-prakasha-ke IRC Logs'
 
 # Log web server users
 log.http.users = {

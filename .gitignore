@@ -10,3 +10,5 @@ dist
 *.~*~
 .bzr
 *.backup
+.prakasha-ssh
+MSG

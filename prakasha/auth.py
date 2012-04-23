@@ -3,7 +3,7 @@ from zope.interface import implements
 from twisted.cred import checkers, portal
 from twisted.web import guard, http, resource, static
 
-from publishbot import config
+from prakasha import config
 
 
 class BasicAuthRealm(object):

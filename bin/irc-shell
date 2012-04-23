@@ -1,4 +1,4 @@
 #!/bin/bash
 
 
-`which python2.7` -i -m publishbot.shell
+`which python2.7` -i -m prakasha.shell

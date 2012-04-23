@@ -10,3 +10,5 @@ dist
 .git
 .gitignore
 *.backup
+.prakasha-ssh
+MSG

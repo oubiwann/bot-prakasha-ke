@@ -11,12 +11,15 @@ from twisted.python import failure
 
 from zope.interface import implements
 
-from publishbot import config
+from prakasha import config
+from prakasha import exceptions
 
 
 def getPrivKey():
     privKeyPath = os.path.join(
         config.ssh.keydir, config.ssh.privkey)
+    if not os.path.exists(privKeyPath):
+        raise exceptions.MissingSSHServerKeysError()
     with open(privKeyPath) as privateKeyBlob:
         privateBlob = privateKeyBlob.read()
         return Key.fromString(data=privateBlob)
@@ -25,6 +28,8 @@ def getPrivKey():
 def getPubKey():
     pubKeyPath = os.path.join(
         config.ssh.keydir, config.ssh.pubkey)
+    if not os.path.exists(pubKeyPath):
+        raise exceptions.MissingSSHServerKeysError()
     with open(pubKeyPath) as publicKeyBlob:
         publicBlob = publicKeyBlob.read()
         return Key.fromString(data=publicBlob)

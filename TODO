@@ -19,8 +19,6 @@ New Features
 
 * update deps (after running in virtual env to identify all of them)
 
-* rename package from publishbot to prakasha
-
 * add instructions for setting up keys
 
 * try to see if ssh -p 6622 localhost "command" works
@@ -28,12 +26,6 @@ New Features
 * move configuration out of python file and into config ini or yaml
 
 * use ~/.bot-prakasha/config.ini as config location
-
-* rename ./bin/bot.tac to ./bin/bot-prakasha.tac
-
-* rename "vox-publishbot" nick to something like "prakasha-bot"
-
-* rename "publishbot" nick to something like "prakasha-log"
 
 * fix initial screen re-draw after login with terminal.app on Mac OS X
 

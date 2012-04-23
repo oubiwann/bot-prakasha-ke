@@ -5,15 +5,15 @@ from twisted.application import service, internet
 from twisted.internet.protocol import ServerFactory
 from twisted.internet.ssl import ClientContextFactory
 
-from publishbot import auth, config, shell
-from publishbot.logger import LoggerFactory
-from publishbot.publisher import Listener, PublisherFactory
+from prakasha import auth, config, shell
+from prakasha.logger import LoggerFactory
+from prakasha.publisher import Listener, PublisherFactory
 
 
-application = service.Application("publishbot")
+application = service.Application("prakasha")
 services = service.IServiceCollection(application)
 
-# XXX move these services into publishbot.services
+# XXX move these services into prakasha.services
 # setup message server
 serverFactory = ServerFactory()
 serverFactory.protocol = Listener
