@@ -14,26 +14,23 @@ from zope.interface import implements
 from prakasha import config
 from prakasha import exceptions
 
-# XXX condense the redundant logic of these next to functions into one private
-# function that the public two can use
+
+def _getKey(path):
+    if not os.path.exists(path):
+        raise exceptions.MissingSSHServerKeysError()
+    with open(path) as keyBlob:
+        return Key.fromString(data=keyBlob.read())
+
 def getPrivKey():
     privKeyPath = os.path.join(
         config.ssh.keydir, config.ssh.privkey)
-    if not os.path.exists(privKeyPath):
-        raise exceptions.MissingSSHServerKeysError()
-    with open(privKeyPath) as privateKeyBlob:
-        privateBlob = privateKeyBlob.read()
-        return Key.fromString(data=privateBlob)
+    return _getKey(privKeyPath)
 
 
 def getPubKey():
     pubKeyPath = os.path.join(
         config.ssh.keydir, config.ssh.pubkey)
-    if not os.path.exists(pubKeyPath):
-        raise exceptions.MissingSSHServerKeysError()
-    with open(pubKeyPath) as publicKeyBlob:
-        publicBlob = publicKeyBlob.read()
-        return Key.fromString(data=publicBlob)
+    return _getKey(pubKeyPath)
 
 
 class MOTDColoredManhole(manhole.ColoredManhole):

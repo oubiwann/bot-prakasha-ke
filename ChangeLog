@@ -9,6 +9,7 @@
 * Updated the setup.py with deps.
 * Moved the util scripts to make targets and added more make targets.
 * Updated config file to convert unicode to str where necessary (for IRC).
+* Cleaned up the code for getting the priv and pub keys.
 
 2012-04-22
 
