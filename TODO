@@ -35,3 +35,5 @@ New Features
   $ ssh -p 6622 localhost "<json * data>"
 
 * add tab-completion
+
+* add an API call to list (and log) all the members of a channel
