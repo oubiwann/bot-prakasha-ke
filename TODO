@@ -17,14 +17,6 @@ New Features
 
 * fix usage notes
 
-* update deps (after running in virtual env to identify all of them)
-
-* add instructions for setting up keys
-
-* move configuration out of python file and into config ini or yaml
-
-* use ~/.bot-prakasha/config.ini as config location
-
 * fix initial screen re-draw after login with terminal.app on Mac OS X
 
 * add support for scheduling messages
@@ -37,3 +29,5 @@ New Features
 * add tab-completion
 
 * add an API call to list (and log) all the members of a channel
+
+* add a custom prompt for the shell

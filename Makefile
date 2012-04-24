@@ -12,7 +12,7 @@ VIRT_DIR ?= .bot-prakasha-ke-venv
 run:
 	twistd -noy bin/bot-prakasha.tac
 
-daemonize:
+daemon:
 	twistd -y bin/bot-prakasha.tac
 
 shell:

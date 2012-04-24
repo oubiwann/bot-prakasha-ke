@@ -23,14 +23,23 @@ To run the server with the defaults, simply do this::
 That will log to stdout, so it's nice for debugging. If you want to run as a
 daemon::
 
-  make daemonize
+  make daemon
 
 To stop the daemon::
 
-  make kill
+  make stop
 
 
 configuration
 -------------
 
-TBD
+A configuration file is automatically generated when you do ``make run`` or
+``make daemon``. However, if you'd like to pre-generate the config file so that
+you can edit it prior to running the server, you can do this::
+
+  make generate-config
+
+WARNING!
+
+    Running the make target ``make generate-config`` will overwrite your
+    existing configuration! Backup your configuration file before using!
