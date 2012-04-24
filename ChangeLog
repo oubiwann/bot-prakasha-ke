@@ -4,6 +4,7 @@
 * Stubbed out some IRC methods in the publisher client.
 * Added API calls for getting the users on a given channel.
 * Added missing docstrings in API.
+* Updated TODO.
 
 2012-04-23
 

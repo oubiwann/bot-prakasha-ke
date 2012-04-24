@@ -34,3 +34,10 @@ New Features
 * add tab-completion to the shell
 
 * when the logger first signs on, log the users who are currently on channel
+
+* add support for an additional authorized_keys file, so that access to the
+  bot's shell may be possible without granting access to the machine/account it
+  is hosted on
+
+* add an RSS/Atom listener that posts updates to IRC when new commits come in,
+  e.g.: https://github.com/dreamhost/bot-prakasha-ke/commits/master.atom
