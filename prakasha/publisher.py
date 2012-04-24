@@ -5,7 +5,7 @@ from twisted.internet.protocol import ReconnectingClientFactory
 import config
 
 
-class Publisher(IRCClient):
+class PublisherClient(IRCClient):
     nickname = config.irc.nick
     password = config.irc.serverPassword
     lineRate = config.irc.lineRate
@@ -24,9 +24,27 @@ class Publisher(IRCClient):
         self.join(channel)
         self.msg(channel, message)
 
+    def irc_ERR_ERRONEUSNICKNAME(self, *args, **kwargs):
+        print "irc_ERR_ERRONEUSNICKNAME", args, kwargs
+
+    def irc_ERR_NICKNAMEINUSE(self, *args, **kwargs):
+        print "irc_ERR_NICKNAMEINUSE", args, kwargs
+
+    def irc_ERR_PASSWDMISMATCH(self, *args, **kwargs):
+        print "irc_ERR_PASSWDMISMATCH", args, kwargs
+
+    def irc_NOTICE(self, *args, **kwargs):
+        print "irc_NOTICE", args, kwargs
+
+    def irc_PRIVMSG(self, *args, **kwargs):
+        print "irc_PRIVMSG", args, kwargs
+
+    def irc_PRIVMSG(self, *args, **kwargs):
+        print "irc_PRIVMSG", args, kwargs
+
 
 class PublisherFactory(ReconnectingClientFactory):
-    protocol = Publisher
+    protocol = PublisherClient
     queued = []
     connection = None
 

@@ -1,3 +1,8 @@
+2012-04-24
+
+* Fixed bug in configuration logic that was setting sslEnabled to true.
+* Stubbed out some IRC methods in the publisher client.
+
 2012-04-23
 
 * Added support for ini files (local dir and user home dir).

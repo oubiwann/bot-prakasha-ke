@@ -175,10 +175,16 @@ def updateConfig():
     # IRC
     irc.servicename = config.get("IRC", "servicename")
     irc.nick = str(config.get("IRC", "nick"))
-    irc.server = config.get("IRC", "server")
+    irc.server = str(config.get("IRC", "server"))
     irc.port = int(config.get("IRC", "port"))
     irc.serverPassword = config.get("IRC", "serverPassword") or None
-    irc.sslEnabled = bool(config.get("IRC", "sslEnabled"))
+    sslEnabled = config.get("IRC", "sslEnabled")
+    if sslEnabled == "True":
+        sslEnabled = True
+    else:
+        sslEnabled = False
+    print " *** Config: sslEnabled = %s *** " % sslEnabled
+    irc.sslEnabled = sslEnabled
     irc.lineRate = int(config.get("IRC", "lineRate"))
 
     # Internal SSH Server

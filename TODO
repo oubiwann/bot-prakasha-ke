@@ -11,9 +11,6 @@ Known Issues
 * when ``make generate-config`` is called, if the file already exists, it is
   not backed up -- simply removed
 
-* the publisher factory can no longer create a client that connects... it just
-  continuously retries a connection
-
 
 New Features
 ------------
