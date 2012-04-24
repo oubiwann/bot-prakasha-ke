@@ -70,11 +70,13 @@ clean:
 	find ./ -name "*.pyc" -exec rm {} \;
 	find ./ -name "*.pyo" -exec rm {} \;
 	find . -name "*.sw[op]" -exec rm {} \;
-	rm -rf $(MSG_FILE) $(MSG_FILE).backup _trial_temp/ build/ dist/ MANIFEST \
+	rm -rf $(BZR_MSG_FILE) $(BZR_MSG_FILE).backup \
+		$(GIT_MSG_FILE) $(GIT_MSG_FILE).backup \
+		_trial_temp/ build/ dist/ MANIFEST \
 		CHECK_THIS_BEFORE_UPLOAD.txt *.egg-info
 
 msg:
-	-@rm $(MSG_FILE)
+	-@rm $(BZR_MSG_FILE) $(GIT_MSG_FILE)
 	@echo '!!! REMOVE THIS LINE !!!' >> $(GIT_MSG_FILE)
 	@git diff ChangeLog |egrep -v '^\+\+\+'|egrep '^\+.*'|sed -e 's/^+//' >> $(GIT_MSG_FILE)
 	@bzr diff ChangeLog |egrep -v '^\+\+\+'|egrep '^\+.*'|sed -e 's/^+//' >> $(BZR_MSG_FILE)
@@ -106,7 +108,7 @@ stat: msg
 	@echo
 	@echo "### Changes ###"
 	@echo
-	-@cat $(MSG_FILE)
+	-@cat $(BZR_MSG_FILE)
 	@echo
 	@echo "### Git working branch status ###"
 	@echo

@@ -11,5 +11,6 @@ dist
 .gitignore
 *.backup
 .prakasha-ssh
-MSG
+BZR_MSG
+GIT_MSG
 .venv

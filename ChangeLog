@@ -11,6 +11,8 @@
 * Updated config file to convert unicode to str where necessary (for IRC).
 * Cleaned up the code for getting the priv and pub keys.
 * Updated TODO.
+* More tweaks to the Makefile to support non-synced changes to bzr and git
+  repos.
 
 2012-04-22
 
