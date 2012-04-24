@@ -19,10 +19,19 @@ class PublisherClient(IRCClient):
             for channel, message in self.factory.queued:
                 self.send(channel, message)
         self.factory.queued = []
+        self.userData = {}
 
     def send(self, channel, message):
         self.join(channel)
         self.msg(channel, message)
+
+    def getUsers(self, channel):
+        return self.userData[channel]
+
+    def irc_RPL_NAMREPLY(self, network, name_data):
+        me, ignore, channel, users = name_data
+        users = users.split()
+        self.userData[channel] = users
 
     def irc_ERR_ERRONEUSNICKNAME(self, *args, **kwargs):
         print "irc_ERR_ERRONEUSNICKNAME", args, kwargs
@@ -41,6 +50,9 @@ class PublisherClient(IRCClient):
 
     def irc_PRIVMSG(self, *args, **kwargs):
         print "irc_PRIVMSG", args, kwargs
+
+    def irc_unknown(self, prefix, command, params):
+        print "irc_unknown", prefix, command, params
 
 
 class PublisherFactory(ReconnectingClientFactory):

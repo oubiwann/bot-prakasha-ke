@@ -2,6 +2,8 @@
 
 * Fixed bug in configuration logic that was setting sslEnabled to true.
 * Stubbed out some IRC methods in the publisher client.
+* Added API calls for getting the users on a given channel.
+* Added missing docstrings in API.
 
 2012-04-23
 

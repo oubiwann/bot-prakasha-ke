@@ -87,16 +87,35 @@ class CommandAPI(object):
         self.namespace = namespace
 
     def getChannels(self):
+        """
+        Get the channels to which this client is joined.
+        """
         return self.loggerFactory.channels
 
+    def getUsers(self, channel):
+        """
+        For a given channel, get the users that have joined it.
+        """
+        return self.publisher.getUsers(channel)
+
     def ls(self):
+        """
+        List the objects in the current namespace, in alphabetical order.
+        """
         keys = sorted(self.namespace.keys())
         pprint(keys)
 
     def banner(self):
+        """
+        Display the login banner and associated help or info.
+        """
         print config.ssh.banner
 
     def joinAll(self):
+        """
+        Join all the channels to which this client is configured to have
+        access.
+        """
         for channel in self.channels:
             self.publisher.join(channel)
 
@@ -175,6 +194,7 @@ def updateNamespace(namespace):
         "ls": commands.ls,
         "banner": commands.banner,
         "channels": commands.getChannels,
+        "users": commands.getUsers,
         "info": commands.banner,
         "publisher": publisher,
         "say": commands.say,

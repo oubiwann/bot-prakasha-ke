@@ -31,6 +31,6 @@ New Features
 * add support for passing JSON as a command, e.g.:
   $ ssh -p 6622 localhost "<json * data>"
 
-* add tab-completion
+* add tab-completion to the shell
 
-* add an API call to list (and log) all the members of a channel
+* when the logger first signs on, log the users who are currently on channel
