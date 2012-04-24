@@ -11,6 +11,10 @@ Known Issues
 * when ``make generate-config`` is called, if the file already exists, it is
   not backed up -- simply removed
 
+* the publisher factory can no longer create a client that connects... it just
+  continuously retries a connection
+
+
 New Features
 ------------
 
@@ -32,8 +36,4 @@ New Features
 
 * add tab-completion
 
-* add an API call to list all the channels
-
 * add an API call to list (and log) all the members of a channel
-
-* change the functions that don't take parameters to properties

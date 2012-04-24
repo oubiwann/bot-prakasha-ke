@@ -17,6 +17,8 @@
 * Added another feature description.
 * Noted a couple bugs.
 * Changed the shell prompt.
+* Moved the banner function into the API class.
+* Added an API call for listing the channels.
 
 2012-04-22
 

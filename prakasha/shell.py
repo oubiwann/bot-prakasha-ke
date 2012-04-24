@@ -1,6 +1,8 @@
 import base64
 from glob import glob
 import os
+from pprint import pprint
+import sys
 
 from twisted.cred import checkers, portal
 from twisted.conch import manhole, manhole_ssh
@@ -77,8 +79,22 @@ class CommandAPI(object):
 
     def __init__(self, loggerFactory, publisher):
         self.loggerFactory = loggerFactory
-        self.channels = self.loggerFactory.channels
+        self.channels = self.getChannels()
         self.publisher = publisher
+        self.namespace = None
+
+    def setNamespace(self, namespace):
+        self.namespace = namespace
+
+    def getChannels(self):
+        return self.loggerFactory.channels
+
+    def ls(self):
+        keys = sorted(self.namespace.keys())
+        pprint(keys)
+
+    def banner(self):
+        print config.ssh.banner
 
     def joinAll(self):
         for channel in self.channels:
@@ -141,12 +157,6 @@ class CommandAPI(object):
 
 def updateNamespace(namespace):
 
-    from pprint import pprint
-    import sys
-
-    def banner():
-        print config.ssh.banner
-
     logService = namespace["services"].getServiceNamed(
         config.log.servicename)
     loggerFactory = logService.args[2]
@@ -162,9 +172,10 @@ def updateNamespace(namespace):
         "sys": sys,
         "config": config,
         "pprint": pprint,
-        "ls": dir,
-        "banner": banner,
-        "info": banner,
+        "ls": commands.ls,
+        "banner": commands.banner,
+        "channels": commands.getChannels,
+        "info": commands.banner,
         "publisher": publisher,
         "say": commands.say,
         "sayMulti": commands.sayMulti,
@@ -173,6 +184,7 @@ def updateNamespace(namespace):
         "setMultiTopics": commands.setMultiTopics,
         "setAllTopics": commands.setAllTopics,
         })
+    commands.setNamespace(namespace)
     return namespace
 
 
