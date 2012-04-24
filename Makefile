@@ -85,13 +85,13 @@ msg:
 commit: msg
 	bzr commit --show-diff --file=$(BZR_MSG_FILE)
 	git commit -a -v -t $(GIT_MSG_FILE)
-	mv $(BZR_MSG_FILE) $(BZR_MSG_FILE).backup
-	mv $(GIT_MSG_FILE) $(GIT_MSG_FILE).backup
-	touch $(BZR_MSG_FILE) $(GIT_MSG_FILE)
+	@mv $(BZR_MSG_FILE) $(BZR_MSG_FILE).backup
+	@mv $(GIT_MSG_FILE) $(GIT_MSG_FILE).backup
+	@touch $(BZR_MSG_FILE) $(GIT_MSG_FILE)
 
 push:
-	git push --all git@$(GITHUB_REPO)
 	bzr push $(LP_REPO)
+	git push --all git@$(GITHUB_REPO)
 #	git push --all https://$(GOOGLE_REPO)
 
 push-tags:
@@ -110,6 +110,10 @@ stat: msg
 	@echo
 	-@cat $(BZR_MSG_FILE)
 	@echo
+	@echo "### Bzr status ###"
+	@echo
+	@bzr stat
+	@echo
 	@echo "### Git working branch status ###"
 	@echo
 	@git status -s
@@ -118,10 +122,6 @@ stat: msg
 	@echo
 	@git branch
 	@echo 
-	@echo "### Bzr status ###"
-	@echo
-	@bzr stat
-	@echo
 
 status: stat
 .PHONY: status

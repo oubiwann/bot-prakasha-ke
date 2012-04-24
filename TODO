@@ -32,6 +32,8 @@ New Features
 
 * add tab-completion
 
+* add an API call to list all the channels
+
 * add an API call to list (and log) all the members of a channel
 
-* add a custom prompt for the shell
+* change the functions that don't take parameters to properties

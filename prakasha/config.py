@@ -32,8 +32,7 @@ ssh.keydir = ".prakasha-ssh"
 ssh.privkey = "id_rsa"
 ssh.pubkey = "id_rsa.pub"
 ssh.localdir = "~/.ssh"
-ssh.banner = """
-:
+ssh.banner = """:
 : Welcome to
 :
 :    .;@@
@@ -62,6 +61,7 @@ ssh.banner = """
 : Type 'dir()' to see the objects in the current namespace.
 :
 : Enjoy!
+:
 """
 
 # Listener

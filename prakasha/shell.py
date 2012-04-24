@@ -36,6 +36,8 @@ def getPubKey():
 class MOTDColoredManhole(manhole.ColoredManhole):
     """
     """
+    ps = (":>> ", "... ")
+
     def initializeScreen(self):
         manhole.ColoredManhole.initializeScreen(self)
         self.terminal.write(self.getMOTD())
@@ -160,6 +162,7 @@ def updateNamespace(namespace):
         "sys": sys,
         "config": config,
         "pprint": pprint,
+        "ls": dir,
         "banner": banner,
         "info": banner,
         "publisher": publisher,
