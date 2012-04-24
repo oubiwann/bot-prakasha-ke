@@ -4,7 +4,8 @@ GITHUB_REPO := github.com:dreamhost/$(PROJ).git
 #GOOGLE_REPO := code.google.com/p/$(PROJ)
 LP_REPO := lp:$(PROJ)
 PKG_NAME := $(PROJ)
-MSG_FILE ?= MSG
+BZR_MSG_FILE ?= BZR_MSG
+GIT_MSG_FILE ?= GIT_MSG
 TMP_FILE ?= /tmp/MSG
 VIRT_DIR ?= .bot-prakasha-ke-venv
 
@@ -74,17 +75,17 @@ clean:
 
 msg:
 	-@rm $(MSG_FILE)
-	@git diff ChangeLog |egrep -v '^\+\+\+'|egrep '^\+.*'|sed -e 's/^+//' >> $(MSG_FILE)
+	@echo '!!! REMOVE THIS LINE !!!' >> $(GIT_MSG_FILE)
+	@git diff ChangeLog |egrep -v '^\+\+\+'|egrep '^\+.*'|sed -e 's/^+//' >> $(GIT_MSG_FILE)
+	@bzr diff ChangeLog |egrep -v '^\+\+\+'|egrep '^\+.*'|sed -e 's/^+//' >> $(BZR_MSG_FILE)
 .PHONY: msg
 
 commit: msg
-	bzr commit --show-diff --file=$(MSG_FILE)
-	@echo '!!! REMOVE THIS LINE !!!' >> $(TMP_FILE)
-	@cat $(MSG_FILE) >> $(TMP_FILE)
-	@mv $(TMP_FILE) $(MSG_FILE)
-	git commit -a -v -t $(MSG_FILE)
-	mv $(MSG_FILE) $(MSG_FILE).backup
-	touch $(MSG_FILE)
+	bzr commit --show-diff --file=$(BZR_MSG_FILE)
+	git commit -a -v -t $(GIT_MSG_FILE)
+	mv $(BZR_MSG_FILE) $(BZR_MSG_FILE).backup
+	mv $(GIT_MSG_FILE) $(GIT_MSG_FILE).backup
+	touch $(BZR_MSG_FILE) $(GIT_MSG_FILE)
 
 push:
 	git push --all git@$(GITHUB_REPO)
