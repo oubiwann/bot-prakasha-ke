@@ -14,6 +14,8 @@
 * More tweaks to the Makefile to support non-synced changes to bzr and git
   repos.
 * Updated README with notes about configuration.
+* Added another feature description.
+* Noted a couple bugs.
 
 2012-04-22
 

@@ -5,7 +5,11 @@ TODO
 Known Issues
 ------------
 
-*
+* when a user nick changes, the change is logged on all channels, even if that
+  user is not logged into one of the channels
+
+* when ``make generate-config`` is called, if the file already exists, it is
+  not backed up -- simply removed
 
 New Features
 ------------
