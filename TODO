@@ -41,3 +41,29 @@ New Features
 
 * add an RSS/Atom listener that posts updates to IRC when new commits come in,
   e.g.: https://github.com/dreamhost/bot-prakasha-ke/commits/master.atom
+
+* generate and host RSS/Atom feeds from pre-defined sources
+
+* accept POSTs of data (RSS or Atom feeds/plain text/JSON) for publishing
+  and/or consumption by an appropriate processor.
+
+* add sftp support to the bot (scp was a no-go)
+
+  * if a file is uploaded, where does it go? maybe create a "files" dict in the
+    namespace, and save in the dict?
+
+  * where does the last git file live?
+
+  * how do we compare them?
+
+  * how do we replace one for the other?
+
+  * once compared, how do we extract the "new commits" and post those to the
+    IRC bot?
+
+  * override openFile to use MemorySFTPFile?
+
+  * override openDirectory to use MemorySFTPDirectory?
+
+  * for the code that's been added so far, take it out of shell, and put it
+    into upload.

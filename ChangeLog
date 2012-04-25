@@ -1,3 +1,8 @@
+2012-04-25
+
+* Added an SFTP implementation that aims to push files into the running memory
+  of the bot.
+
 2012-04-24
 
 * Fixed bug in configuration logic that was setting sslEnabled to true.
@@ -5,6 +10,7 @@
 * Added API calls for getting the users on a given channel.
 * Added missing docstrings in API.
 * Updated TODO.
+* More TODO updates.
 
 2012-04-23
 
