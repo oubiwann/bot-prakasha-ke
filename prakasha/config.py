@@ -27,6 +27,7 @@ irc.lineRate = 1
 ssh = Config()
 ssh.servicename = "SSH Server"
 ssh.port = 6622
+ssh.pidfile = "twistd.pid"
 ssh.username = "root"
 ssh.keydir = ".prakasha-ssh"
 ssh.privkey = "id_rsa"
@@ -115,6 +116,7 @@ def buildDefaults():
     config.add_section("SSH")
     config.set("SSH", "servicename", ssh.servicename)
     config.set("SSH", "port", str(ssh.port))
+    config.set("SSH", "pidfile", ssh.pidfile)
     config.set("SSH", "username", ssh.username)
     config.set("SSH", "keydir", ssh.keydir)
     config.set("SSH", "privkey", ssh.privkey)
@@ -183,13 +185,13 @@ def updateConfig():
         sslEnabled = True
     else:
         sslEnabled = False
-    print " *** Config: sslEnabled = %s *** " % sslEnabled
     irc.sslEnabled = sslEnabled
     irc.lineRate = int(config.get("IRC", "lineRate"))
 
     # Internal SSH Server
     ssh.servicename = config.get("SSH", "servicename")
     ssh.port = int(config.get("SSH", "port"))
+    ssh.pidfile = str(config.get("SSH", "pidfile"))
     ssh.username = str(config.get("SSH", "username"))
     ssh.keydir = config.get("SSH", "keydir")
     ssh.privkey = config.get("SSH", "privkey")
