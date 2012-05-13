@@ -9,11 +9,12 @@ from twisted.web import server, static, vhost
 
 from dreamssh import const as dreamssh_const
 from dreamssh import scripts as dreamssh_scripts
-from dreamssh.shell.service import getShellFactory
+from dreamssh.shell import pythonshell
 
-from prakasha import auth, config, const, exceptions, meta, shell
+from prakasha import auth, config, exceptions, meta, shell
 from prakasha.logger import LoggerFactory
 from prakasha.publisher import Listener, PublisherFactory
+from prakasha.shell import CommandAPI
 
 
 class SubCommandOptions(usage.Options):
@@ -37,14 +38,14 @@ class Options(usage.Options):
     def parseOptions(self, options):
         usage.Options.parseOptions(self, options)
         # check options
-        if self.subCommand == const.KEYGEN:
-            dreamssh_scripts.KeyGen()
+        if self.subCommand == dreamssh_const.KEYGEN:
+            dreamssh_scripts.KeyGen(config)
             sys.exit(0)
-        elif self.subCommand == const.SHELL:
-            dreamssh_scripts.ConnectToShell()
+        elif self.subCommand == dreamssh_const.SHELL:
+            dreamssh_scripts.ConnectToShell(config)
             sys.exit(0)
-        elif self.subCommand == const.STOP:
-            dreamssh_scripts.StopDaemon()
+        elif self.subCommand == dreamssh_const.STOP:
+            dreamssh_scripts.StopDaemon(config)
             sys.exit(0)
 
 
@@ -106,9 +107,19 @@ def makeService(options):
     # setup ssh access to a Python shell
     interpreterType = dreamssh_const.PYTHON
     sshFactory = getShellFactory(
-        interpreterType, app=application, services=services)
+        interpreterType, config=config, app=application, services=services)
     sshserver = internet.TCPServer(config.ssh.port, sshFactory)
     sshserver.setName(config.ssh.servicename)
     sshserver.setServiceParent(services)
 
     return services
+
+
+def getShellFactory(interpreterType, **namespace):
+    realm = pythonshell.PythonTerminalRealm(namespace, CommandAPI)
+    sshPortal = portal.Portal(realm)
+    factory = manhole_ssh.ConchFactory(sshPortal)
+    factory.privateKeys = {'ssh-rsa': util.getPrivKey()}
+    factory.publicKeys = {'ssh-rsa': util.getPubKey()}
+    factory.portal.registerChecker(SSHPublicKeyDatabase())
+    return factory
