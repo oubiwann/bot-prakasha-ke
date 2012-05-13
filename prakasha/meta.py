@@ -5,6 +5,7 @@ author = "Duncan McGreggor"
 author_email = "duncan@dreamhost.com"
 license = "BSD"
 url = "http://github.com/dreamhost/%s" % display_name
-description = "A log-publishing bot featuring a shell you can ssh into and run commands from"
+description = ("A log-publishing bot featuring a shell you can ssh into and "
+               "run commands from")
 
 
