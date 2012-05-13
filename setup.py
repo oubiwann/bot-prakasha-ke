@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 from prakasha import meta
 from prakasha.util import dist
@@ -12,7 +12,6 @@ setup(
     author_email=meta.author_email,
     url=meta.url,
     license=meta.license,
-    packages=dist.findPackages(meta.library_name),
     long_description=dist.catReST(
         "docs/PRELUDE.rst",
         "README.rst",
@@ -23,6 +22,10 @@ setup(
         "docs/HISTORY.rst",
         stop_on_errors=True,
         out=True),
+    packages=find_packages() + ["twisted.plugins"],
+    package_data={
+        "twisted": ['plugins/prakasha.py']
+        },  
     install_requires=[
         "twisted",
         "PyOpenSSL",
