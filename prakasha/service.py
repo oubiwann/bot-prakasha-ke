@@ -8,7 +8,7 @@ from twisted.scripts import twistd
 from twisted.web import server, static, vhost
 
 from dreamssh import const as dreamssh_const
-from dreamssh import scripts
+from dreamssh import scripts as dreamssh_scripts
 from dreamssh.shell.service import getShellFactory
 
 from prakasha import auth, config, const, exceptions, meta, shell
@@ -38,13 +38,13 @@ class Options(usage.Options):
         usage.Options.parseOptions(self, options)
         # check options
         if self.subCommand == const.KEYGEN:
-            scripts.KeyGen()
+            dreamssh_scripts.KeyGen()
             sys.exit(0)
         elif self.subCommand == const.SHELL:
-            scripts.ConnectToShell()
+            dreamssh_scripts.ConnectToShell()
             sys.exit(0)
         elif self.subCommand == const.STOP:
-            scripts.StopDaemon()
+            dreamssh_scripts.StopDaemon()
             sys.exit(0)
 
 
