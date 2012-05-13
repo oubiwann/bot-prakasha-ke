@@ -17,26 +17,140 @@ from twisted.python import components, failure, log
 
 from zope.interface import implements
 
+from dreamssh.shell import pythonshell
+
 from prakasha import config
 from prakasha import exceptions
 
 
-def _getKey(path):
-    if not os.path.exists(path):
-        raise exceptions.MissingSSHServerKeysError()
-    with open(path) as keyBlob:
-        return Key.fromString(data=keyBlob.read())
+class CommandAPI(pythonshell.CommandAPI):
 
-def getPrivKey():
-    privKeyPath = os.path.join(
-        config.ssh.keydir, config.ssh.privkey)
-    return _getKey(privKeyPath)
+    def __init__(self, loggerFactory, publisher):
+        super(CommandAPI, self).__init__()
+        self.loggerFactory = loggerFactory
+        self.channels = self.getChannels()
+        self.publisher = publisher
+        self.namespace = None
 
+    def getChannels(self):
+        """
+        Get the channels to which this client is joined.
+        """
+        return self.loggerFactory.channels
 
-def getPubKey():
-    pubKeyPath = os.path.join(
-        config.ssh.keydir, config.ssh.pubkey)
-    return _getKey(pubKeyPath)
+    def getUsers(self, channel):
+        """
+        For a given channel, get the users that have joined it.
+        """
+        return self.publisher.getUsers(channel)
+
+    def ls(self):
+        """
+        List the objects in the current namespace, in alphabetical order.
+        """
+        keys = sorted(self.namespace.keys())
+        pprint(keys)
+
+    def banner(self):
+        """
+        Display the login banner and associated help or info.
+        """
+        print config.ssh.banner
+
+    def joinAll(self):
+        """
+        Join all the channels to which this client is configured to have
+        access.
+        """
+        for channel in self.channels:
+            self.publisher.join(channel)
+
+    def say(self, channel, message):
+        """
+        A convenience wrapper for the IRC client method of the same name.
+        """
+        self.publisher.say(channel, message)
+
+    def sayMulti(self, data, broadcastMessage=""):
+        """
+        Send a public message to multipl channels. The 'data' parameter is a
+        dict with the keys being the channel names and the values being the
+        message to say on that channel. If a 'broadcastMessage' is supplied,
+        the values in the dict are ignored, and all channels will used the
+        broadcast message.
+        """
+        for channel, message in data.items():
+            if broadcastMessage:
+                message = broadcastMessage
+            self.say(channel, message)
+
+    def sayAll(self, message):
+        """
+        Send a public message to all channels.
+        """
+        for channel in self.channels:
+            self.say(channel, message)
+
+    def setTopic(self, channel, topic, say=False):
+        """
+        Set a channel's topic.
+        """
+        self.publisher.topic(channel, topic)
+        if say:
+            msg = "Channel topic change: %s" % topic
+            self.say(channel, msg)
+
+    def setMultiTopics(self, data, say=False):
+        """
+        Set the topic for multiple channels at once. The 'data' parameter is a
+        dict with the keys being the channel names and the values being the
+        desired channel topic. If the 'say' parameter is defined, the new topic
+        will also be sent as a public message on the channel.
+        """
+        for channel, topic in data.items():
+            self.setTopic(channel, topic, say)
+
+    def setAllTopics(self, topic, say=False):
+        """
+        Set the topic for all defined channels at once.  If the 'say' parameter
+        is defined, the new topic will also be sent as a public message on the
+        channel.
+        """
+        for channel in self.channels:
+            self.setTopic(channel, topic, say)
+
+class ShellInterpreter(pythonshell.PythonInterpreter):
+    """
+    """
+    # XXX namespace code needs to be better organized:
+    #   * should the CommandAPI be in this module? 
+    def updateNamespace(self, namespace={}):
+        if not self.handler.commandAPI.appOrig:
+            self.handler.commandAPI.appOrig = self.handler.namespace.get("app")
+        namespace.update({
+            "os": os,
+            "sys": sys,
+            "pprint": pprint,
+            "app": self.handler.commandAPI.getAppData,
+            "banner": self.handler.commandAPI.banner,
+            "info": self.handler.commandAPI.banner,
+            "ls": self.handler.commandAPI.ls,
+            "clear": self.handler.commandAPI.clear,
+            "quit": self.handler.commandAPI.quit,
+            "exit": self.handler.commandAPI.quit,
+            "channels": commands.getChannels,
+            "users": commands.getUsers,
+            "publisher": publisher,
+            "say": commands.say,
+            "sayMulti": commands.sayMulti,
+            "sayAll": commands.sayAll,
+            "setTopic": commands.setTopic,
+            "setMultiTopics": commands.setMultiTopics,
+            "setAllTopics": commands.setAllTopics,
+            })
+        if "config" not in namespace.keys():
+            namespace["config"] = config
+        self.handler.namespace.update(namespace)
 
 
 class MOTDColoredManhole(manhole.ColoredManhole):
@@ -189,137 +303,8 @@ class ExecutingTerminalRealm(manhole_ssh.TerminalRealm):
         self.sessionFactory.namespace = namespace
 
 
-class CommandAPI(object):
-
-    def __init__(self, loggerFactory, publisher):
-        self.loggerFactory = loggerFactory
-        self.channels = self.getChannels()
-        self.publisher = publisher
-        self.namespace = None
-
-    def setNamespace(self, namespace):
-        self.namespace = namespace
-
-    def getChannels(self):
-        """
-        Get the channels to which this client is joined.
-        """
-        return self.loggerFactory.channels
-
-    def getUsers(self, channel):
-        """
-        For a given channel, get the users that have joined it.
-        """
-        return self.publisher.getUsers(channel)
-
-    def ls(self):
-        """
-        List the objects in the current namespace, in alphabetical order.
-        """
-        keys = sorted(self.namespace.keys())
-        pprint(keys)
-
-    def banner(self):
-        """
-        Display the login banner and associated help or info.
-        """
-        print config.ssh.banner
-
-    def joinAll(self):
-        """
-        Join all the channels to which this client is configured to have
-        access.
-        """
-        for channel in self.channels:
-            self.publisher.join(channel)
-
-    def say(self, channel, message):
-        """
-        A convenience wrapper for the IRC client method of the same name.
-        """
-        self.publisher.say(channel, message)
-
-    def sayMulti(self, data, broadcastMessage=""):
-        """
-        Send a public message to multipl channels. The 'data' parameter is a
-        dict with the keys being the channel names and the values being the
-        message to say on that channel. If a 'broadcastMessage' is supplied,
-        the values in the dict are ignored, and all channels will used the
-        broadcast message.
-        """
-        for channel, message in data.items():
-            if broadcastMessage:
-                message = broadcastMessage
-            self.say(channel, message)
-
-    def sayAll(self, message):
-        """
-        Send a public message to all channels.
-        """
-        for channel in self.channels:
-            self.say(channel, message)
-
-    def setTopic(self, channel, topic, say=False):
-        """
-        Set a channel's topic.
-        """
-        self.publisher.topic(channel, topic)
-        if say:
-            msg = "Channel topic change: %s" % topic
-            self.say(channel, msg)
-
-    def setMultiTopics(self, data, say=False):
-        """
-        Set the topic for multiple channels at once. The 'data' parameter is a
-        dict with the keys being the channel names and the values being the
-        desired channel topic. If the 'say' parameter is defined, the new topic
-        will also be sent as a public message on the channel.
-        """
-        for channel, topic in data.items():
-            self.setTopic(channel, topic, say)
-
-    def setAllTopics(self, topic, say=False):
-        """
-        Set the topic for all defined channels at once.  If the 'say' parameter
-        is defined, the new topic will also be sent as a public message on the
-        channel.
-        """
-        for channel in self.channels:
-            self.setTopic(channel, topic, say)
 
 
-def updateNamespace(namespace):
-
-    logService = namespace["services"].getServiceNamed(
-        config.log.servicename)
-    loggerFactory = logService.args[2]
-
-    pubService = namespace["services"].getServiceNamed(
-        config.irc.servicename)
-    publisher = pubService.args[2].connection
-
-    commands = CommandAPI(loggerFactory, publisher)
-    commands.joinAll()
-    namespace.update({
-        "os": os,
-        "sys": sys,
-        "config": config,
-        "pprint": pprint,
-        "ls": commands.ls,
-        "banner": commands.banner,
-        "channels": commands.getChannels,
-        "users": commands.getUsers,
-        "info": commands.banner,
-        "publisher": publisher,
-        "say": commands.say,
-        "sayMulti": commands.sayMulti,
-        "sayAll": commands.sayAll,
-        "setTopic": commands.setTopic,
-        "setMultiTopics": commands.setMultiTopics,
-        "setAllTopics": commands.setAllTopics,
-        })
-    commands.setNamespace(namespace)
-    return namespace
 
 
 def getShellFactory(**namespace):
