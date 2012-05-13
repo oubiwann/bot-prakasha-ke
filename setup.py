@@ -28,6 +28,7 @@ setup(
         "PyOpenSSL",
         "pycrypto",
         "pyasn1",
+        "DreamSSH",
         "docutils",
         ],
     classifiers=[
