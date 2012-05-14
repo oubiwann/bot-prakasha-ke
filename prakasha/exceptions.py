@@ -1,11 +1,4 @@
-class Error(Exception):
-    """
-    A base class for exceptions.
-    """
-    def __init__(self, msg=None):
-        if msg == None:
-            msg = self.__doc__.strip()
-        super(Error, self).__init__(msg)
+from dreamssh.sdk.exceptions import Error
 
 
 class MissingSSHServerKeysError(Error):

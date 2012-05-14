@@ -16,10 +16,11 @@ from dreamssh.sdk import (
 from dreamssh.util import ssh as dreamssh_util
 
 
-from prakasha import auth, exceptions, meta, shell
-from prakasha.logger import LoggerFactory
-from prakasha.publisher import Listener, PublisherFactory
-from prakasha.shell import CommandAPI
+from prakasha import exceptions, meta
+from prakasha.app import auth, shell
+from prakasha.app.logger import LoggerFactory
+from prakasha.app.publisher import Listener, PublisherFactory
+from prakasha.app.shell import CommandAPI, ShellTerminalRealm
 
 
 config = registry.getConfig()
@@ -115,7 +116,7 @@ def makeService(options):
     # setup ssh access to a Python shell
     interpreterType = dreamssh_const.PYTHON
     sshFactory = getShellFactory(
-        interpreterType, config=config, app=application, services=services)
+        interpreterType, loggerFactory, app=application, services=services)
     sshserver = internet.TCPServer(config.ssh.port, sshFactory)
     sshserver.setName(config.ssh.servicename)
     sshserver.setServiceParent(services)
@@ -123,8 +124,9 @@ def makeService(options):
     return services
 
 
-def getShellFactory(interpreterType, **namespace):
-    realm = pythonshell.PythonTerminalRealm(namespace, CommandAPI)
+def getShellFactory(interpreterType, loggerFactory, **namespace):
+    realm = ShellTerminalRealm(
+        namespace, CommandAPI, loggerFactory=loggerFactory)
     sshPortal = portal.Portal(realm)
     factory = manhole_ssh.ConchFactory(sshPortal)
     factory.privateKeys = {'ssh-rsa': dreamssh_util.getPrivKey()}

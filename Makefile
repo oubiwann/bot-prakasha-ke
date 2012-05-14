@@ -10,7 +10,7 @@ TMP_FILE ?= /tmp/MSG
 VIRT_DIR ?= .bot-prakasha-ke-venv
 
 keygen:
-	@python -c "import prakasha;from dreamssh.sdk import scripts;scripts.KeyGen()"
+	@python -c "import prakasha.app;from dreamssh.sdk import scripts;scripts.KeyGen()"
 
 run:
 	twistd -n prakasha
@@ -19,10 +19,10 @@ daemon:
 	twistd prakasha
 
 shell:
-	@python -c "import prakasha;from dreamssh.sdk import scripts;scripts.ConnectToShell()"
+	@python -c "import prakasha.app;from dreamssh.sdk import scripts;scripts.ConnectToShell()"
 
 stop:
-	@python -c "import prakasha;from dreamssh.sdk import scripts;scripts.StopDaemon()"
+	@python -c "import prakasha.app;from dreamssh.sdk import scripts;scripts.StopDaemon()"
 
 run-test:
 	make daemon && make shell && make stop

@@ -120,6 +120,7 @@ class CommandAPI(pythonshell.CommandAPI):
         for channel in self.channels:
             self.setTopic(channel, topic, say)
 
+
 class ShellInterpreter(pythonshell.PythonInterpreter):
     """
     """
@@ -154,50 +155,19 @@ class ShellInterpreter(pythonshell.PythonInterpreter):
         self.handler.namespace.update(namespace)
 
 
-class MOTDColoredManhole(manhole.ColoredManhole):
+class ShellManhole(pythonshell.PythonManhole):
     """
     """
-    ps = (":>> ", "... ")
-
-    def initializeScreen(self):
-        manhole.ColoredManhole.initializeScreen(self)
-        self.terminal.write(self.getMOTD())
-
-    def getMOTD(self):
-        return config.ssh.banner or "Welcome to MOTDColoredManhole!"
+    def setInterpreter(self):
+        self.interpreter = ShellInterpreter(self, locals=self.namespace)
 
 
-
-class TerminalSession(manhole_ssh.TerminalSession):
+class ShellTerminalRealm(pythonshell.PythonTerminalRealm):
     """
     """
-    def windowChanged(self, coords):
-        log.msg("New coordinates: %s" % str(coords))
+    manholeFactory = ShellManhole
 
-
-class ExecutingTerminalSession(TerminalSession):
-    """
-    """
-    def _processShellCommand(self, cmd, namespace):
-        try:
-            result = eval(cmd, namespace)
-        except NameError:
-            command = cmd.split("(")[0]
-            msg = "Command '%s' not found in namespace!" % command
-            raise exceptions.IllegalAPICommand(msg)
-
-    def execCommand(self, proto, cmd):
-        avatar = proto.session.avatar
-        conn = avatar.conn
-        namespace = updateNamespace(proto.session.session.namespace)
-        if cmd.startswith("scp"):
-            # XXX raise custom error
-            pass
-        else:
-            self._processShellCommand(cmd, namespace)
-            avatar.conn.transport.loseConnection()
-
-
+        
 class SFTPEnabledTerminalUser(manhole_ssh.TerminalUser, unix.UnixConchUser):
     """
     """
@@ -294,38 +264,10 @@ class ModifiedSFTPServer(unix.SFTPServerForUnixConchUser):
         return MemorySFTPDirectory(self, self._absPath(path))
 
 
-class ExecutingTerminalRealm(manhole_ssh.TerminalRealm):
-    """
-    """
-    userFactory = SFTPEnabledTerminalUser
-    sessionFactory = ExecutingTerminalSession
-
-    def __init__(self, namespace):
-        self.sessionFactory.namespace = namespace
-
-
-
-
-
-
-def getShellFactory(**namespace):
-
-    def getManhole(serverProtocol):
-        return MOTDColoredManhole(updateNamespace(namespace))
-
-    realm = ExecutingTerminalRealm(namespace)
-    realm.chainedProtocolFactory.protocolFactory = getManhole
-    sshPortal = portal.Portal(realm)
-    factory = manhole_ssh.ConchFactory(sshPortal)
-    factory.privateKeys = {'ssh-rsa': getPrivKey()}
-    factory.publicKeys = {'ssh-rsa': getPubKey()}
-    factory.portal.registerChecker(SSHPublicKeyDatabase())
-    return factory
-
-
 components.registerAdapter(
     ModifiedSFTPServer, SFTPEnabledTerminalUser,
     filetransfer.ISFTPServer)
+
 
 components.registerAdapter(
     SessionForTerminalUser, SFTPEnabledTerminalUser,

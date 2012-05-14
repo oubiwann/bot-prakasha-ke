@@ -12,6 +12,7 @@ setup(
     author_email=meta.author_email,
     url=meta.url,
     license=meta.license,
+    install_requires=meta.requires,
     long_description=dist.catReST(
         "docs/PRELUDE.rst",
         "README.rst",
@@ -20,20 +21,12 @@ setup(
         "docs/USAGE.rst",
         "TODO",
         "docs/HISTORY.rst",
-        stop_on_errors=True,
+        stop_on_errors=False,
         out=True),
     packages=find_packages() + ["twisted.plugins"],
     package_data={
         "twisted": ['plugins/prakasha.py']
         },  
-    install_requires=[
-        "twisted",
-        "PyOpenSSL",
-        "pycrypto",
-        "pyasn1",
-        "DreamSSH",
-        "docutils",
-        ],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
