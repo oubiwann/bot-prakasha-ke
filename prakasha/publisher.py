@@ -2,7 +2,10 @@ from twisted.protocols.basic import LineReceiver
 from twisted.words.protocols.irc import IRCClient
 from twisted.internet.protocol import ReconnectingClientFactory
 
-import config
+from dreamssh.sdk import registry
+
+
+config = registry.getConfig()
 
 
 class PublisherClient(IRCClient):

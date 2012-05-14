@@ -5,7 +5,10 @@ from datetime import datetime
 from twisted.words.protocols.irc import IRCClient
 from twisted.internet.protocol import ClientFactory
 
-import config
+from dreamssh.sdk import registry
+
+
+config = registry.getConfig()
 
 
 def getLogFilename(server, channel):

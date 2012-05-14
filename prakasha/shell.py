@@ -15,12 +15,13 @@ from twisted.conch.ssh.factory import SSHFactory
 from twisted.conch.ssh.keys import Key
 from twisted.python import components, failure, log
 
-from zope.interface import implements
+from dreamssh.app.shell import pythonshell
+from dreamssh.sdk import registry
 
-from dreamssh.shell import pythonshell
-
-from prakasha import config
 from prakasha import exceptions
+
+
+config = registry.getConfig()
 
 
 class CommandAPI(pythonshell.CommandAPI):

@@ -2,8 +2,16 @@ from ConfigParser import SafeConfigParser
 import json
 import os
 
+from zope.interface import moduleProvides
 
-class Config(object): pass
+from dreamssh.sdk import interfaces
+
+
+moduleProvides(interfaces.IConfig)
+
+
+class Config(object):
+    pass
 
 
 # Main
@@ -237,7 +245,5 @@ if not os.path.exists(configFile):
 updateConfig()
 
 
-#del SafeConfigParser, json, os
 del Config
-#del buildDefaults, configFile, getConfigFile, updateConfig, writeDefaults
 del configFile, updateConfig

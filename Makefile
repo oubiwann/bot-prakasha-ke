@@ -9,17 +9,23 @@ GIT_MSG_FILE ?= GIT_MSG
 TMP_FILE ?= /tmp/MSG
 VIRT_DIR ?= .bot-prakasha-ke-venv
 
+keygen:
+	@python -c "import prakasha;from dreamssh.sdk import scripts;scripts.KeyGen()"
+
 run:
-	twistd -noy bin/bot-prakasha.tac
+	twistd -n prakasha
 
 daemon:
-	twistd -y bin/bot-prakasha.tac
+	twistd prakasha
 
 shell:
-	ssh -p 6622 127.0.0.1
+	@python -c "import prakasha;from dreamssh.sdk import scripts;scripts.ConnectToShell()"
 
 stop:
-	kill `cat twistd.pid`
+	@python -c "import prakasha;from dreamssh.sdk import scripts;scripts.StopDaemon()"
+
+run-test:
+	make daemon && make shell && make stop
 
 generate-config:
 	rm -rf ~/.prakasha-bot/config.ini
@@ -66,14 +72,11 @@ log-changes:
 	git log --format='%ad %n* %B %N%n' --date=short
 
 clean:
-	find ./ -name "*~" -exec rm {} \;
-	find ./ -name "*.pyc" -exec rm {} \;
-	find ./ -name "*.pyo" -exec rm {} \;
-	find . -name "*.sw[op]" -exec rm {} \;
-	rm -rf $(BZR_MSG_FILE) $(BZR_MSG_FILE).backup \
-		$(GIT_MSG_FILE) $(GIT_MSG_FILE).backup \
-		_trial_temp/ build/ dist/ MANIFEST \
-		CHECK_THIS_BEFORE_UPLOAD.txt *.egg-info
+	sudo rm -rfv dist/ build/ MANIFEST *.egg-info
+	rm -rfv _trial_temp/ CHECK_THIS_BEFORE_UPLOAD.txt twistd.log
+	find ./ -name "*~" -exec rm -v {} \;
+	sudo find ./ -name "*.py[co]" -exec rm -v {} \;
+	find . -name "*.sw[op]" -exec rm -v {} \;
 
 msg:
 	-@rm $(BZR_MSG_FILE) $(GIT_MSG_FILE)

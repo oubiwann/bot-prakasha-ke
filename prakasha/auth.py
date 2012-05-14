@@ -3,7 +3,10 @@ from zope.interface import implements
 from twisted.cred import checkers, portal
 from twisted.web import guard, http, resource, static
 
-from prakasha import config
+from dreamssh.sdk import registry
+
+
+config = registry.getConfig()
 
 
 class BasicAuthRealm(object):

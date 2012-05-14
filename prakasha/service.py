@@ -1,20 +1,28 @@
 import sys
 
 from twisted.application import service, internet
+from twisted.conch import manhole_ssh
+from twisted.conch.checkers import SSHPublicKeyDatabase
+from twisted.cred import portal
 from twisted.internet.protocol import ServerFactory
 from twisted.internet.ssl import ClientContextFactory
 from twisted.python import usage
 from twisted.scripts import twistd
 from twisted.web import server, static, vhost
 
-from dreamssh import const as dreamssh_const
-from dreamssh import scripts as dreamssh_scripts
-from dreamssh.shell import pythonshell
+from dreamssh.app.shell import pythonshell
+from dreamssh.sdk import (
+    const as dreamssh_const, scripts as dreamssh_scripts, registry)
+from dreamssh.util import ssh as dreamssh_util
 
-from prakasha import auth, config, exceptions, meta, shell
+
+from prakasha import auth, exceptions, meta, shell
 from prakasha.logger import LoggerFactory
 from prakasha.publisher import Listener, PublisherFactory
 from prakasha.shell import CommandAPI
+
+
+config = registry.getConfig()
 
 
 class SubCommandOptions(usage.Options):
@@ -119,7 +127,7 @@ def getShellFactory(interpreterType, **namespace):
     realm = pythonshell.PythonTerminalRealm(namespace, CommandAPI)
     sshPortal = portal.Portal(realm)
     factory = manhole_ssh.ConchFactory(sshPortal)
-    factory.privateKeys = {'ssh-rsa': util.getPrivKey()}
-    factory.publicKeys = {'ssh-rsa': util.getPubKey()}
+    factory.privateKeys = {'ssh-rsa': dreamssh_util.getPrivKey()}
+    factory.publicKeys = {'ssh-rsa': dreamssh_util.getPubKey()}
     factory.portal.registerChecker(SSHPublicKeyDatabase())
     return factory
