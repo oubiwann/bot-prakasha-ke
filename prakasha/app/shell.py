@@ -15,7 +15,7 @@ from twisted.conch.ssh.factory import SSHFactory
 from twisted.conch.ssh.keys import Key
 from twisted.python import components, failure, log
 
-from dreamssh.app.shell import pythonshell
+from dreamssh.app.shell import base as baseshell, pythonshell
 from dreamssh.sdk import registry
 
 from prakasha import exceptions
@@ -29,15 +29,20 @@ class CommandAPI(pythonshell.CommandAPI):
     def __init__(self, loggerFactory, publisher):
         super(CommandAPI, self).__init__()
         self.loggerFactory = loggerFactory
-        self.channels = self.getChannels()
         self.publisher = publisher
         self.namespace = None
 
-    def getChannels(self):
+    def getLoggedChannels(self):
         """
-        Get the channels to which this client is joined.
+        Get the channels that are being logged.
         """
         return self.loggerFactory.channels
+
+    def getJoinedChannels(self):
+        """
+        Get the channels to which this client has actually joined.
+        """
+        return self.publisher.userData.keys()
 
     def getUsers(self, channel):
         """
@@ -63,14 +68,14 @@ class CommandAPI(pythonshell.CommandAPI):
         Join all the channels to which this client is configured to have
         access.
         """
-        for channel in self.channels:
+        for channel in self.getLoggedChannels():
             self.publisher.join(channel)
 
     def say(self, channel, message):
         """
         A convenience wrapper for the IRC client method of the same name.
         """
-        self.publisher.say(channel, message)
+        self.publisher.send(channel, message)
 
     def sayMulti(self, data, broadcastMessage=""):
         """
@@ -87,9 +92,9 @@ class CommandAPI(pythonshell.CommandAPI):
 
     def sayAll(self, message):
         """
-        Send a public message to all channels.
+        Send a public message to all logged channels.
         """
-        for channel in self.channels:
+        for channel in self.getLoggedChannels():
             self.say(channel, message)
 
     def setTopic(self, channel, topic, say=False):
@@ -117,7 +122,7 @@ class CommandAPI(pythonshell.CommandAPI):
         is defined, the new topic will also be sent as a public message on the
         channel.
         """
-        for channel in self.channels:
+        for channel in self.getLoggedChannels():
             self.setTopic(channel, topic, say)
 
 
@@ -125,7 +130,7 @@ class ShellInterpreter(pythonshell.PythonInterpreter):
     """
     """
     # XXX namespace code needs to be better organized:
-    #   * should the CommandAPI be in this module? 
+    #   * should the CommandAPI be in this module?
     def updateNamespace(self, namespace={}):
         if not self.handler.commandAPI.appOrig:
             self.handler.commandAPI.appOrig = self.handler.namespace.get("app")
@@ -140,15 +145,16 @@ class ShellInterpreter(pythonshell.PythonInterpreter):
             "clear": self.handler.commandAPI.clear,
             "quit": self.handler.commandAPI.quit,
             "exit": self.handler.commandAPI.quit,
-            "channels": commands.getChannels,
-            "users": commands.getUsers,
-            "publisher": publisher,
-            "say": commands.say,
-            "sayMulti": commands.sayMulti,
-            "sayAll": commands.sayAll,
-            "setTopic": commands.setTopic,
-            "setMultiTopics": commands.setMultiTopics,
-            "setAllTopics": commands.setAllTopics,
+            "loggedChannels": self.handler.commandAPI.getLoggedChannels,
+            "joinedChannels": self.handler.commandAPI.getJoinedChannels,
+            "users": self.handler.commandAPI.getUsers,
+            "publisher": self.handler.commandAPI.publisher,
+            "say": self.handler.commandAPI.say,
+            "sayMulti": self.handler.commandAPI.sayMulti,
+            "sayAll": self.handler.commandAPI.sayAll,
+            "setTopic": self.handler.commandAPI.setTopic,
+            "setMultiTopics": self.handler.commandAPI.setMultiTopics,
+            "setAllTopics": self.handler.commandAPI.setAllTopics,
             })
         if "config" not in namespace.keys():
             namespace["config"] = config
@@ -166,8 +172,25 @@ class ShellTerminalRealm(pythonshell.PythonTerminalRealm):
     """
     """
     manholeFactory = ShellManhole
+    def __init__(self, namespace, apiClass):
+        baseshell.ExecutingTerminalRealm.__init__(self, namespace)
+        if not apiClass:
+            apiClass = CommandAPI
 
-        
+        def getManhole(serverProtocol):
+            logService = namespace["services"].getServiceNamed(
+                config.log.servicename)
+            loggerFactory = logService.args[2]
+
+            pubService = namespace["services"].getServiceNamed(
+                config.irc.servicename)
+            publisher = pubService.args[2].connection
+            apis = apiClass(loggerFactory, publisher)
+            return self.manholeFactory(apis, namespace)
+
+        self.chainedProtocolFactory.protocolFactory = getManhole
+
+
 class SFTPEnabledTerminalUser(manhole_ssh.TerminalUser, unix.UnixConchUser):
     """
     """

@@ -38,7 +38,7 @@ class Options(usage.Options):
     """
     """
     subCommands = [
-        ["keygen", None, SubCommandOptions, 
+        ["keygen", None, SubCommandOptions,
          "Generate ssh keys for the server"],
         ["shell", None, SubCommandOptions, "Login to the server"],
         ["stop", None, SubCommandOptions, "Stop the server"],
@@ -82,7 +82,6 @@ def makeService(options):
     msgService.setName(config.irc.servicename)
     msgService.setServiceParent(services)
 
-
     # setup IRC log client
     logger = LoggerFactory(config.irc.server, config.log.channels)
     logService = internet.TCPClient(config.irc.server, config.irc.port,
@@ -90,13 +89,11 @@ def makeService(options):
     logService.setName(config.log.servicename)
     logService.setServiceParent(services)
 
-
     # setuplog rotator
     rotService = internet.TimerService(config.log.rotate.checkInterval,
         logger.rotateLogs, logService)
     rotService.setName(config.log.rotate.servicename)
     rotService.setServiceParent(services)
-
 
     # setup log file web server
     webroot = static.File(config.log.http.docRoot)
@@ -104,8 +101,8 @@ def makeService(options):
         vResource = vhost.VHostMonsterResource()
         webroot.putChild('vhost', vResource)
     if config.log.http.auth == 'basic':
-        guarded = auth.guardResourceWithBasicAuth(webroot, config.log.http.realm,
-            config.log.http.users)
+        guarded = auth.guardResourceWithBasicAuth(
+            webroot, config.log.http.realm, config.log.http.users)
         site = server.Site(guarded)
     else:
         site = server.Site(webroot)
@@ -116,17 +113,15 @@ def makeService(options):
     # setup ssh access to a Python shell
     interpreterType = dreamssh_const.PYTHON
     sshFactory = getShellFactory(
-        interpreterType, loggerFactory, app=application, services=services)
+        interpreterType, app=application, services=services)
     sshserver = internet.TCPServer(config.ssh.port, sshFactory)
     sshserver.setName(config.ssh.servicename)
     sshserver.setServiceParent(services)
-
     return services
 
 
-def getShellFactory(interpreterType, loggerFactory, **namespace):
-    realm = ShellTerminalRealm(
-        namespace, CommandAPI, loggerFactory=loggerFactory)
+def getShellFactory(interpreterType, **namespace):
+    realm = ShellTerminalRealm(namespace, CommandAPI)
     sshPortal = portal.Portal(realm)
     factory = manhole_ssh.ConchFactory(sshPortal)
     factory.privateKeys = {'ssh-rsa': dreamssh_util.getPrivKey()}
