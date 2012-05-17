@@ -25,7 +25,8 @@ class PublisherClient(IRCClient):
         self.userData = {}
 
     def send(self, channel, message):
-        self.join(channel)
+        if channel not in self.userData.keys():
+            self.join(channel)
         self.msg(channel, message)
 
     def getUsers(self, channel):
@@ -53,6 +54,9 @@ class PublisherClient(IRCClient):
 
     def irc_PRIVMSG(self, *args, **kwargs):
         print "irc_PRIVMSG", args, kwargs
+
+    def irc_ERR_CANNOTSENDTOCHAN(self, *args, **kwargs):
+        print "irc_ERR_CANNOTSENDTOCHAN", args, kwargs
 
     def irc_unknown(self, prefix, command, params):
         print "irc_unknown", prefix, command, params
