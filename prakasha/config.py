@@ -201,8 +201,8 @@ class PrakashaConfigurator(Configurator):
         http.users = json.loads(config.get("HTTP", "users"))
         http.userdb = config.get("HTTP", "userdb")
 
+        return config
 
-PrakashaConfigurator(main, ssh, irc, listener, log)
 
-
-del PrakashaConfigurator
+configurator = PrakashaConfigurator(main, ssh, irc, listener, log)
+configurator.updateConfig()
