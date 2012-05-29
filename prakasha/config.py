@@ -204,5 +204,6 @@ class PrakashaConfigurator(Configurator):
         return config
 
 
-configurator = PrakashaConfigurator(main, ssh, irc, listener, log)
-configurator.updateConfig()
+def updateConfig():
+    configurator = PrakashaConfigurator(main, ssh, irc, listener, log)
+    configurator.updateConfig()
