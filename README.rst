@@ -1,3 +1,6 @@
+.. image:: resources/images/logox128.png
+   :align: right
+
 about
 -----
 
@@ -46,3 +49,13 @@ WARNING!
 
     Running the make target ``make generate-config`` will overwrite your
     existing configuration! Backup your configuration file before using!
+
+
+contributions
+-------------
+
+Project planning is done here: https://blueprints.launchpad.net/bot-prakasha-ke
+
+File bugs here: https://github.com/dreamhost/bot-prakasha-ke/issues/new
+
+Authors hang out on Frenode here: #adytum

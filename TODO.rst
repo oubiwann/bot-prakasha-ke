@@ -22,8 +22,6 @@ New Features
 
 * fix usage notes
 
-* fix initial screen re-draw after login with terminal.app on Mac OS X
-
 * add support for scheduling messages
 
 * add support for setting/updating the bot's schedule
