@@ -15,11 +15,6 @@ Known Issues
 New Features
 ------------
 
-* add in-line image (logo) to README
-
-* add notes in README about launchpad project URL, blueprint usage, code repos,
-  where to submit bugs, patches, etc.
-
 * fix usage notes
 
 * add support for scheduling messages
