@@ -15,3 +15,4 @@ BZR_MSG
 GIT_MSG
 .venv
 dropin.cache
+.DS_Store
