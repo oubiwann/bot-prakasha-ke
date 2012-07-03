@@ -6,15 +6,15 @@ about
 
 bot-prakasha-ke is an IRC bot which does the following:
 
- * connects to arbitrary channels on an IRC host
- * logs those channels (topics and conversations)
- * broadcasts messages or changes topics
- * offers a web service view viewing recorded logs
- * offers an ssh shell of the running bot for batch-updating channel topics
-   or broadcasting messages
- * allows one to use the ssh command to script broadcast messages, topic
-   updates, etc., e.g.::
-     ssh -p 6622 127.0.0.1 "say('#cool-channel', 'Have a good night!')"
+* connects to arbitrary channels on an IRC host
+* logs those channels (topics and conversations)
+* broadcasts messages or changes topics
+* offers a web service view viewing recorded logs
+* offers an ssh shell of the running bot for batch-updating channel topics
+  or broadcasting messages
+* allows one to use the ssh command to script broadcast messages, topic
+  updates, etc., e.g.::
+    ssh -p 6622 127.0.0.1 "say('#cool-channel', 'Have a good night!')"
 
 quick start
 -----------
