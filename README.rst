@@ -1,4 +1,4 @@
-.. image:: bot-prakasha-ke/tree/master/resources/images/logox128.png
+.. image:: bot-prakasha-ke/raw/master/resources/images/logox128.png
    :align: right
 
 about
