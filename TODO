@@ -12,20 +12,6 @@ Known Issues
   not backed up -- simply removed
 
 
-Tasks
------
-
-* move .tac service definition into its own module
-
-* convert .tac to twistd plugin
-
-* replace ssh service creation with dreamssh
-
-* replace shell module with dreamssh
-
-* move SFTP stuff into its own module (I thought I did that already ...?)
-
-
 New Features
 ------------
 
