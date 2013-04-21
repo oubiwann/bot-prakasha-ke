@@ -17,9 +17,10 @@ from carapace.util import ssh as carapace_util
 
 from prakasha import exceptions, meta
 from prakasha.app import auth, shell
+from prakasha.app.api import CommandAPI
 from prakasha.app.logger import LoggerFactory
 from prakasha.app.publisher import Listener, PublisherFactory
-from prakasha.app.shell import CommandAPI, ShellTerminalRealm
+from prakasha.app.shell import ShellTerminalRealm
 
 
 config = registry.getConfig()

@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from carapace.app.shell import base as pythonshell
+from carapace.app.shell import pythonshell
 from carapace.sdk import registry
 
 
