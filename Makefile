@@ -8,6 +8,7 @@ BZR_MSG_FILE ?= BZR_MSG
 GIT_MSG_FILE ?= GIT_MSG
 TMP_FILE ?= /tmp/MSG
 VIRT_DIR ?= .venv
+VIRT_BUILD_DIR ?= test-build
 
 
 keygen:
@@ -28,9 +29,9 @@ stop:
 run-test:
 	make daemon && make shell && make stop
 
+generate-config: DIR ?= $(VIRT_DIR)/$(VIRT_BUILD_DIR)
 generate-config:
-	rm -rf ~/.prakasha-bot/config.ini
-	python -c "from prakasha import config; config.writeDefaults();"
+	@. $(DIR)/bin/activate && python -c "from prakasha import app;from carapace.sdk import scripts;scripts.GenerateConfig();"
 
 bzr-2-git:
 	git init && bzr fast-export `pwd` | git fast-import && git reset HEAD
@@ -166,8 +167,7 @@ version:
 virtual-deps:
 	sudo pip install virtualenv
 
-virtual-build: SUB_DIR ?= test-build
-virtual-build: DIR ?= $(VIRT_DIR)/$(SUB_DIR)
+virtual-build: DIR ?= $(VIRT_DIR)/$(VIRT_BUILD_DIR)
 virtual-build: clean build virtual-deps
 	mkdir -p $(VIRT_DIR)
 	-test -d $(DIR) || virtualenv $(DIR)
