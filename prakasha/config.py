@@ -7,13 +7,17 @@ from zope.interface import moduleProvides
 from carapace.config import Config, Configurator, main, ssh
 from carapace.sdk import interfaces
 
+from prakasha import meta
+
 
 moduleProvides(interfaces.IConfig)
 
 
 # Main
-main.config.userdir = os.path.expanduser("~/.prakasha-bot")
-main.config.userfile = "%s/%s" % (main.config.userdir, main.config.localfile)
+main.config.datadir = os.path.expanduser("~/.%s" % meta.library_name)
+main.config.localfile = "config.ini"
+main.config.installedfile = os.path.join(
+    main.config.datadir, main.config.localfile)
 
 # Internal SSH Server
 ssh.servicename = "SSH Server"
