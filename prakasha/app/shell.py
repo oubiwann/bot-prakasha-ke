@@ -2,8 +2,8 @@ import os
 from pprint import pprint
 import sys
 
-from dreamssh.app.shell import base as baseshell, pythonshell
-from dreamssh.sdk import registry
+from carapace.app.shell import base as baseshell, pythonshell
+from carapace.sdk import registry
 
 from prakasha.app import api
 

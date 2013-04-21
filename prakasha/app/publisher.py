@@ -2,7 +2,7 @@ from twisted.protocols.basic import LineReceiver
 from twisted.words.protocols.irc import IRCClient
 from twisted.internet.protocol import ReconnectingClientFactory
 
-from dreamssh.sdk import registry
+from carapace.sdk import registry
 
 
 config = registry.getConfig()

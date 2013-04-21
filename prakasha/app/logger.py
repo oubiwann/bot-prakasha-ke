@@ -5,7 +5,7 @@ from datetime import datetime
 from twisted.words.protocols.irc import IRCClient
 from twisted.internet.protocol import ClientFactory
 
-from dreamssh.sdk import registry
+from carapace.sdk import registry
 
 
 config = registry.getConfig()

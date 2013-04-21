@@ -4,8 +4,8 @@ import os
 
 from zope.interface import moduleProvides
 
-from dreamssh.config import Config, Configurator, main, ssh
-from dreamssh.sdk import interfaces
+from carapace.config import Config, Configurator, main, ssh
+from carapace.sdk import interfaces
 
 
 moduleProvides(interfaces.IConfig)

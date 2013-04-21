@@ -1,6 +1,6 @@
 from prakasha import config
 
-from dreamssh.sdk import registry
+from carapace.sdk import registry
 
 
 registry.registerConfig(config)

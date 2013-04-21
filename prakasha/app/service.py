@@ -10,11 +10,10 @@ from twisted.python import usage
 from twisted.scripts import twistd
 from twisted.web import server, static, vhost
 
-from dreamssh.app.shell import pythonshell
-from dreamssh.sdk import (
-    const as dreamssh_const, scripts as dreamssh_scripts, registry)
-from dreamssh.util import ssh as dreamssh_util
-
+from carapace.app.shell import pythonshell
+from carapace.sdk import (
+    const as carapace_const, scripts as carapace_scripts, registry)
+from carapace.util import ssh as carapace_util
 
 from prakasha import exceptions, meta
 from prakasha.app import auth, shell
@@ -47,14 +46,14 @@ class Options(usage.Options):
     def parseOptions(self, options):
         usage.Options.parseOptions(self, options)
         # check options
-        if self.subCommand == dreamssh_const.KEYGEN:
-            dreamssh_scripts.KeyGen(config)
+        if self.subCommand == carapace_const.KEYGEN:
+            carapace_scripts.KeyGen(config)
             sys.exit(0)
-        elif self.subCommand == dreamssh_const.SHELL:
-            dreamssh_scripts.ConnectToShell(config)
+        elif self.subCommand == carapace_const.SHELL:
+            carapace_scripts.ConnectToShell(config)
             sys.exit(0)
-        elif self.subCommand == dreamssh_const.STOP:
-            dreamssh_scripts.StopDaemon(config)
+        elif self.subCommand == carapace_const.STOP:
+            carapace_scripts.StopDaemon(config)
             sys.exit(0)
 
 
@@ -111,7 +110,7 @@ def makeService(options):
     webserver.setServiceParent(services)
 
     # setup ssh access to a Python shell
-    interpreterType = dreamssh_const.PYTHON
+    interpreterType = carapace_const.PYTHON
     sshFactory = getShellFactory(
         interpreterType, app=application, services=services)
     sshserver = internet.TCPServer(config.ssh.port, sshFactory)
@@ -124,7 +123,7 @@ def getShellFactory(interpreterType, **namespace):
     realm = ShellTerminalRealm(namespace, CommandAPI)
     sshPortal = portal.Portal(realm)
     factory = manhole_ssh.ConchFactory(sshPortal)
-    factory.privateKeys = {'ssh-rsa': dreamssh_util.getPrivKey()}
-    factory.publicKeys = {'ssh-rsa': dreamssh_util.getPubKey()}
+    factory.privateKeys = {'ssh-rsa': carapace_util.getPrivKey()}
+    factory.publicKeys = {'ssh-rsa': carapace_util.getPubKey()}
     factory.portal.registerChecker(SSHPublicKeyDatabase())
     return factory

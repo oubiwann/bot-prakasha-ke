@@ -1,7 +1,7 @@
 from pprint import pprint
 
-from dreamssh.app.shell import base as pythonshell
-from dreamssh.sdk import registry
+from carapace.app.shell import base as pythonshell
+from carapace.sdk import registry
 
 
 config = registry.getConfig()

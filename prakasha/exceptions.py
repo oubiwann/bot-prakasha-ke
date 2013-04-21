@@ -1,4 +1,4 @@
-from dreamssh.sdk.exceptions import Error
+from carapace.sdk.exceptions import Error
 
 
 class MissingSSHServerKeysError(Error):

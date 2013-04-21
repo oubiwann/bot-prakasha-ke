@@ -6,7 +6,7 @@ from twisted.conch import interfaces, manhole_ssh, unix
 from twisted.conch.ssh import filetransfer, session
 from twisted.python import components
 
-from dreamssh.sdk import registry
+from carapace.sdk import registry
 
 from prakasha.app import shell
 

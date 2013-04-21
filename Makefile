@@ -1,6 +1,6 @@
 PROJ := bot-prakasha-ke
 LIB := prakasha
-GITHUB_REPO := github.com:dreamhost/$(PROJ).git
+GITHUB_REPO := github.com:oubiwann/$(PROJ).git
 #GOOGLE_REPO := code.google.com/p/$(PROJ)
 LP_REPO := lp:$(PROJ)
 PKG_NAME := $(PROJ)
@@ -11,7 +11,7 @@ VIRT_DIR ?= .bot-prakasha-ke-venv
 
 
 keygen:
-	@python -c "import prakasha.app;from dreamssh.sdk import scripts;scripts.KeyGen()"
+	@python -c "import prakasha.app;from carapace.sdk import scripts;scripts.KeyGen()"
 
 run:
 	twistd -n prakasha
@@ -20,10 +20,10 @@ daemon:
 	twistd prakasha
 
 shell:
-	@python -c "import prakasha.app;from dreamssh.sdk import scripts;scripts.ConnectToShell()"
+	@python -c "import prakasha.app;from carapace.sdk import scripts;scripts.ConnectToShell()"
 
 stop:
-	@python -c "import prakasha.app;from dreamssh.sdk import scripts;scripts.StopDaemon()"
+	@python -c "import prakasha.app;from carapace.sdk import scripts;scripts.StopDaemon()"
 
 run-test:
 	make daemon && make shell && make stop
