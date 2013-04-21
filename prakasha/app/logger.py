@@ -190,6 +190,6 @@ class LoggerFactory(ClientFactory):
             service.startService()
             rotateDate = datetime(*now.timetuple()[0:3]+self.getRotateTime())
             self.lastRotation = rotateDate
-        else:
-            print "Elapsed time (%s) is not more than %s hours; skipping..." % (
-                elapsedHours, timeCheck)
+        #else:
+        #    print "Elapsed time (%s) is not more than %s hours; skipping..." % (
+        #        elapsedHours, timeCheck)
