@@ -204,6 +204,10 @@ class PrakashaConfigurator(Configurator):
         return config
 
 
+def configuratorFactory():
+    return PrakashaConfigurator(main, ssh, irc, listener, log)
+
+
 def updateConfig():
-    configurator = PrakashaConfigurator(main, ssh, irc, listener, log)
+    configurator = configuratorFactory()
     configurator.updateConfig()
