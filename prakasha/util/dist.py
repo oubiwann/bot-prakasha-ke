@@ -126,4 +126,3 @@ def catReST(*args, **kwds):
                 print
                 raise ValueError("ReST validation error")
     return res
-

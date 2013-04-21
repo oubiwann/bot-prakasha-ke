@@ -38,8 +38,8 @@ class SFTPEnabledTerminalUser(manhole_ssh.TerminalUser, unix.UnixConchUser):
         try:
             for i in f:
                 func = i[0]
-                args = len(i)>1 and i[1] or ()
-                kw = len(i)>2 and i[2] or {}
+                args = len(i) > 1 and i[1] or ()
+                kw = len(i) > 2 and i[2] or {}
                 r = func(*args, **kw)
         finally:
             os.setegid(0)
@@ -82,7 +82,7 @@ class MemorySFTPDirectory(object):
 
     def next(self):
         try:
-           f = self.files.pop(0)
+            f = self.files.pop(0)
         except IndexError:
             raise StopIteration
         else:

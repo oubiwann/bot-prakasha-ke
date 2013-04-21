@@ -20,7 +20,7 @@ class BasicAuthRealm(object):
     def requestAvatar(self, avatarId, mind, *interfaces):
         if resource.IResource in interfaces:
             return (
-                resource.IResource, 
+                resource.IResource,
                 self.resource,
                 lambda: None)
         raise NotImplementedError()

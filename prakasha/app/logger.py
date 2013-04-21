@@ -50,7 +50,7 @@ class LoggerClient(IRCClient):
     """
     nickname = config.log.nick
     loggers = {}
-    
+
     def connectionMade(self):
         IRCClient.connectionMade(self)
         for chan in self.getChannels():
@@ -103,7 +103,7 @@ class LoggerClient(IRCClient):
         except KeyError:
             template = "Could not log the following messege to %s:\n%s"
             print template % (channel, msg)
-        
+
     def action(self, user, channel, msg):
         """
         This will get called when the bot sees someone do an action.
@@ -181,7 +181,7 @@ class LoggerFactory(ClientFactory):
         now = datetime.now()
         diff = now - last
         diffInSeconds = (diff.days * 60 * 60 * 24) + diff.seconds
-        elapsedHours = (diffInSeconds) /60. /60.
+        elapsedHours = (diffInSeconds) / 60. / 60.
         timeCheck = config.log.rotate.maxAgeHours
         if elapsedHours >= timeCheck:
             print "Elapsed time (%s) is more than %s hours; resetting..." % (

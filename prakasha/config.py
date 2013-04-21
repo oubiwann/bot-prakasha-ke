@@ -87,7 +87,7 @@ log.http.servicename = "Log Browser"
 log.http.port = 6680
 log.http.docRoot = 'irclogs'
 log.http.vhostEnabled = True
-log.http.vhost= 'localhost'
+log.http.vhost = 'localhost'
 #log.http.auth = 'basic'
 log.http.auth = None
 log.http.realm = 'bot-prakasha-ke IRC Logs'
@@ -185,7 +185,7 @@ class PrakashaConfigurator(Configurator):
         # Log rotator
         rotate.servicename = config.get("Rotator", "servicename")
         rotate.checkInterval = int(config.get("Rotator", "checkInterval"))
-        rotate.time = config.get("Rotator", "time") 
+        rotate.time = config.get("Rotator", "time")
         rotate.maxAgeHours = int(config.get("Rotator", "maxAgeHours"))
 
         # Log web server
@@ -193,7 +193,7 @@ class PrakashaConfigurator(Configurator):
         http.port = int(config.get("HTTP", "port"))
         http.docRoot = config.get("HTTP", "docRoot")
         http.vhostEnabled = bool(config.get("HTTP", "vhostEnabled"))
-        http.vhost= config.get("HTTP", "vhost")
+        http.vhost = config.get("HTTP", "vhost")
         http.auth = config.get("HTTP", "auth")
         http.realm = config.get("HTTP", "realm")
 

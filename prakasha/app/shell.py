@@ -57,6 +57,7 @@ class ShellTerminalRealm(pythonshell.PythonTerminalRealm):
     """
     """
     manholeFactory = ShellManhole
+
     def __init__(self, namespace, apiClass):
         baseshell.ExecutingTerminalRealm.__init__(self, namespace)
         if not apiClass:
@@ -79,6 +80,5 @@ class ShellTerminalRealm(pythonshell.PythonTerminalRealm):
 class SessionForTerminalUser(object):
     """
     """
-
     def __init__(self, avatar):
         self.avatar = avatar
