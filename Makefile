@@ -7,7 +7,7 @@ PKG_NAME := $(PROJ)
 BZR_MSG_FILE ?= BZR_MSG
 GIT_MSG_FILE ?= GIT_MSG
 TMP_FILE ?= /tmp/MSG
-VIRT_DIR ?= .bot-prakasha-ke-venv
+VIRT_DIR ?= .venv
 
 
 keygen:
@@ -163,17 +163,19 @@ check-integration:
 version:
 	@echo $(VERSION)
 
+virtual-deps:
+	sudo pip install virtualenv
+
 virtual-build: SUB_DIR ?= test-build
 virtual-build: DIR ?= $(VIRT_DIR)/$(SUB_DIR)
-virtual-build: clean build
+virtual-build: clean build virtual-deps
 	mkdir -p $(VIRT_DIR)
 	-test -d $(DIR) || virtualenv $(DIR)
 	@. $(DIR)/bin/activate
 	-test -e $(DIR)/bin/twistd || $(DIR)/bin/pip install twisted
 	-test -e $(DIR)/bin/rst2html.py || $(DIR)/bin/pip install docutils
-	$(DIR)/bin/pip uninstall -vy $(PKG_NAME)
-	rm -rf $(DIR)/lib/python2.7/site-packages/$(PKG_NAME)*
-	$(DIR)/bin/easy_install-2.7 ./dist/$(PKG_NAME)*
+	. $(DIR)/bin/activate && pip install ./dist/$(PACKAGE_NAME)*
+#	$(DIR)/bin/pip uninstall -vy $(PKG_NAME)
 
 clean-virt: clean
 	rm -rf $(VIRT_DIR)
