@@ -48,13 +48,13 @@ class Options(usage.Options):
         usage.Options.parseOptions(self, options)
         # check options
         if self.subCommand == carapace_const.KEYGEN:
-            carapace_scripts.KeyGen(config)
+            carapace_scripts.KeyGen()
             sys.exit(0)
         elif self.subCommand == carapace_const.SHELL:
-            carapace_scripts.ConnectToShell(config)
+            carapace_scripts.ConnectToShell()
             sys.exit(0)
         elif self.subCommand == carapace_const.STOP:
-            carapace_scripts.StopDaemon(config)
+            carapace_scripts.StopDaemon()
             sys.exit(0)
 
 
