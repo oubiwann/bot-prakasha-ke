@@ -3,7 +3,7 @@ import os
 
 legalReSTFiles = [
     "README.rst",
-    "TODO",
+    "TODO.rst",
     "DEPENDENCIES",
     ]
 

@@ -1,4 +1,4 @@
 include README.rst
-include TODO
+include TODO.rst
 graft twisted
 
